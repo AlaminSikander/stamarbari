@@ -1,0 +1,592 @@
+{
+  "brand": "S T Amar Bari Resort",
+  "tagline": "Your Home on the Island",
+  "nav": {
+    "home": "Home",
+    "rooms": "Rooms",
+    "experience": "Experience",
+    "gallery": "Gallery",
+    "saintMartin": "Saint Martin",
+    "offers": "Offers",
+    "about": "About",
+    "contact": "Contact",
+    "bookNow": "Book Now",
+    "blog": "Blog",
+    "faq": "FAQ",
+    "packages": "Packages",
+    "ourStory": "Our Story",
+    "menu": "Menu",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "skip": "Skip to content",
+    "primary": "Main navigation",
+    "breadcrumb": "Breadcrumb",
+    "subtitles": {
+      "home": "Welcome home",
+      "rooms": "Garden-view stays",
+      "experience": "Island days",
+      "gallery": "Photographs",
+      "saintMartin": "Travel notes",
+      "offers": "Direct stays",
+      "about": "The family",
+      "contact": "Reach the resort",
+      "blog": "Journal",
+      "faq": "Good to know"
+    },
+    "close": "Close"
+  },
+  "hero": {
+    "title": "S T Amar Bari Resort",
+    "titleLead": "Your Home on the",
+    "titleAccent": "Island",
+    "kicker": "Saint Martin, Bangladesh",
+    "body": "A peaceful island stay with warm hospitality, garden-view rooms and the sea close by.",
+    "book": "Book Your Stay",
+    "explore": "Explore Resort",
+    "scroll": "Scroll"
+  },
+  "search": {
+    "checkIn": "Check-in",
+    "checkOut": "Check-out",
+    "adults": "Adults",
+    "children": "Children",
+    "room": "Room",
+    "anyRoom": "Any room",
+    "submit": "Check Availability",
+    "loading": "Checking availability...",
+    "error": "We couldn't check availability right now. Please try again.",
+    "empty": "No rooms available for these dates.",
+    "errorRequired": "Check-in and check-out dates are required.",
+    "errorOrder": "Check-out date must be after check-in.",
+    "barLabel": "Check availability"
+  },
+  "rooms": {
+    "from": "From {price} / night",
+    "fromShort": "From {price}/night",
+    "view": "View Room",
+    "learnMore": "Learn More",
+    "book": "Book Now",
+    "adults": "{count} adults",
+    "guests": "{count} Guests",
+    "bath": "Attached bathroom",
+    "bathCount": "1 Bath",
+    "noRate": "Rates on request"
+  },
+  "booking": {
+    "progress": "Booking step",
+    "guest": "Guest details",
+    "meal": "Meal plan",
+    "addons": "Add-ons",
+    "summary": "Booking summary",
+    "pay": "Pay advance with bKash",
+    "hold": "Your room is held for 15 minutes.",
+    "policy": "If a guest misses their ship, no refund is issued.",
+    "confirmed": "Booking Confirmed",
+    "failed": "Payment could not be completed.",
+    "failedBody": "Your payment was not confirmed.",
+    "tryAgain": "Try Again",
+    "contact": "Contact Resort",
+    "download": "Download Invoice",
+    "whatsapp": "WhatsApp Resort",
+    "home": "Back to Home",
+    "thanks": "Thank you, {name}",
+    "number": "Booking Number",
+    "advance": "Advance Paid",
+    "remaining": "Remaining"
+  },
+  "why": {
+    "title": "Why book direct",
+    "items": [
+      "Direct communication with the resort",
+      "Clear booking information",
+      "Flexible date communication",
+      "Direct support",
+      "Special direct-booking offers when available"
+    ]
+  },
+  "footer": {
+    "quick": "Quick links",
+    "policies": "Policies",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "cancellation": "Cancellation",
+    "rights": "© S T Amar Bari Resort",
+    "tagline": "A quiet, honest island stay on Saint Martin — garden-view rooms, warm hospitality and the sea close by.",
+    "explore": "Explore",
+    "stay": "Your stay",
+    "contact": "Contact",
+    "follow": "Follow the resort",
+    "credits": "Photo credits",
+    "backToTop": "Back to top",
+    "bookTitle": "Ready for the island?",
+    "bookBody": "Check dates online, or write to the family on WhatsApp."
+  },
+  "aboutPage": {
+    "title": "About Us",
+    "subtitle": "Our story, our home, and how we welcome guests on Saint Martin Island",
+    "storyTitle": "Our Story",
+    "storyFallback": "S T Amar Bari Resort is a peaceful place to stay on Saint Martin Island. Close to the sea, with warm hospitality and the feeling of home.",
+    "photosSoon": "Photographs will appear here when published",
+    "valuesTitle": "Our Values & Mission",
+    "valuesIntro": "These simple promises shape a stay at S T Amar Bari.",
+    "values": [
+      {
+        "title": "Home",
+        "body": "Amar Bari means “My Home” in Bangla. Guests are welcomed as they would be in a family house by the sea."
+      },
+      {
+        "title": "Hospitality",
+        "body": "A warm welcome, quiet garden-view rooms, and time to enjoy Saint Martin at an island pace."
+      },
+      {
+        "title": "Honesty",
+        "body": "Garden view, attached bathroom and hot water. Air conditioning, Wi-Fi and television are not currently available."
+      },
+      {
+        "title": "Care",
+        "body": "Treat the garden, the beach and the island with care. Carry waste back where you can, and leave the shore as you found it."
+      }
+    ],
+    "missionTitle": "Our Mission",
+    "mission": "To give guests a peaceful Saint Martin stay that feels like home — simple, warm, and honest about island life.",
+    "welcomeTitle": "How we welcome you",
+    "welcomeIntro": "A published staff directory is not available yet. Until names and photographs are shared by the family, this is how we host.",
+    "welcome": [
+      {
+        "title": "Saint Martin Island",
+        "role": "Poschim Para, CTB Beach Road"
+      },
+      {
+        "title": "Garden-view rooms",
+        "role": "Attached bathroom and hot water"
+      },
+      {
+        "title": "Direct booking",
+        "role": "Call or WhatsApp +880 1839-425157"
+      },
+      {
+        "title": "Your Home on the Island",
+        "role": "A quiet stay, kept simple and warm"
+      }
+    ],
+    "book": "Book Your Stay",
+    "contact": "Contact",
+    "storyEyebrow": "Our home",
+    "valuesEyebrow": "What guides us",
+    "welcomeEyebrow": "Hospitality"
+  },
+  "homePage": {
+    "bookTitle": "Begin your stay",
+    "storyEyebrow": "Our home",
+    "storyTitle": "A quiet island stay, kept simple and warm",
+    "storyFallback": "S T Amar Bari Resort is a peaceful place to stay on Saint Martin Island. Close to the sea, with warm hospitality and the feeling of home.",
+    "storyCta": "Discover Our Story",
+    "roomsEyebrow": "Accommodation",
+    "roomsTitle": "Our Room Collection",
+    "roomsIntro": "Garden-view rooms with attached bathrooms and hot water. Air conditioning, Wi-Fi and television are not currently available.",
+    "roomsCta": "View All Accommodations",
+    "galleryTitle": "Our Gallery",
+    "galleryIntro": "Photographs are published from the admin when they are ready.",
+    "galleryCta": "View Full Gallery",
+    "highlightsTitle": "What you will find here",
+    "highlightsIntro": "We only list what the resort actually offers today.",
+    "highlights": [
+      {
+        "title": "Garden view",
+        "body": "Rooms look onto the garden, not a fabricated sea-view tower."
+      },
+      {
+        "title": "Attached bathroom",
+        "body": "Every listed room category includes an attached bathroom."
+      },
+      {
+        "title": "Hot water",
+        "body": "Hot water is available in the rooms."
+      },
+      {
+        "title": "Close to the sea",
+        "body": "The resort sits on Poschim Para, CTB Beach Road, Saint Martin Island."
+      },
+      {
+        "title": "Direct booking",
+        "body": "Book here or on WhatsApp. Rooms are held on the server, not on a fake calendar."
+      },
+      {
+        "title": "Honest stay",
+        "body": "Air conditioning, Wi-Fi and television are not currently available."
+      }
+    ],
+    "ctaTitle": "Stay at Amar Bari",
+    "ctaBody": "Reserve a garden-view room, or write to the resort with your dates.",
+    "ctaBook": "Reserve Your Stay",
+    "ctaContact": "Contact"
+  },
+  "roomsPage": {
+    "title": "Our Rooms",
+    "subtitle": "Comfortable garden-view rooms on Saint Martin Island",
+    "eyebrow": "Accommodation",
+    "all": "All rooms",
+    "filterLabel": "Filter rooms by view",
+    "count": "{count, plural, one {# room category} other {# room categories}}",
+    "empty": "Room details are being published. Call or WhatsApp the resort for availability."
+  },
+  "offersPage": {
+    "title": "Offers",
+    "subtitle": "Stay notes from S T Amar Bari. Discounts apply only when the resort publishes a real amount.",
+    "empty": "No offers are currently available.",
+    "badge": "Stay note",
+    "percentOff": "{value}% off",
+    "amountOff": "৳{value} off",
+    "learnMore": "Learn More",
+    "book": "Book Now",
+    "back": "All offers",
+    "eyebrow": "Direct stays"
+  },
+  "blogPage": {
+    "title": "Journal",
+    "subtitle": "Notes from the island stay — travel, rooms, and what to expect",
+    "empty": "No blog posts yet.",
+    "badge": "Journal",
+    "learnMore": "Learn More",
+    "back": "All articles",
+    "eyebrow": "Journal",
+    "readTime": "{minutes} min read"
+  },
+  "legalPage": {
+    "privacyTitle": "Privacy policy",
+    "privacySubtitle": "What we collect to complete a stay, and what we do not store",
+    "termsTitle": "Terms & conditions",
+    "termsSubtitle": "Booking, availability, advance payment and the stay on Saint Martin",
+    "cancellationTitle": "Cancellation policy",
+    "cancellationSubtitle": "Refunds, timing, and what happens if a guest misses the ship",
+    "empty": "This page is managed from the resort admin and will appear once published.",
+    "eyebrow": "Guest information"
+  },
+  "faqPage": {
+    "title": "FAQ",
+    "subtitle": "Clear answers about rooms, arrival and what the resort currently has",
+    "empty": "No questions have been published yet.",
+    "badge": "FAQ",
+    "moreTitle": "Still have a question?",
+    "moreBody": "Write to the family on WhatsApp or send a message — we are happy to help you plan.",
+    "moreCta": "Ask the resort",
+    "eyebrow": "Good to know"
+  },
+  "saintMartinPage": {
+    "title": "Saint Martin",
+    "subtitle": "Travel notes for Bangladesh’s coral island — schedules change, so always confirm before you go",
+    "badge": "Island",
+    "learnMore": "Learn More",
+    "back": "All island notes",
+    "empty": "This note is managed from the resort admin.",
+    "guides": {
+      "travelGuide": "Travel guide",
+      "touristSpots": "Tourist spots",
+      "cheraDwip": "Chhera Dwip",
+      "weather": "Weather",
+      "tides": "Tides",
+      "ecoTourism": "Eco tourism",
+      "whatToPack": "What to pack",
+      "firstTime": "First-time guide",
+      "emergency": "Emergency information",
+      "facilities": "Resort facilities"
+    },
+    "eyebrow": "Island notes",
+    "count": "{count} notes",
+    "guideEyebrow": "Saint Martin"
+  },
+  "galleryPage": {
+    "title": "Photo Gallery",
+    "subtitle": "Explore the resort through photographs published by the family",
+    "all": "All",
+    "empty": "The gallery is waiting for the first island photographs.",
+    "eyebrow": "Gallery",
+    "count": "{count, plural, one {# photograph} other {# photographs}}",
+    "filterLabel": "Filter photographs"
+  },
+  "contact": {
+    "title": "Contact Us",
+    "intro": "We are here on Saint Martin. Send a message, call, or write on WhatsApp.",
+    "getInTouch": "Get in touch",
+    "formTitle": "Send us a message",
+    "name": "Your name",
+    "email": "Email",
+    "phone": "Phone",
+    "subject": "Subject",
+    "subjectHint": "Select a topic",
+    "subjects": {
+      "general": "General",
+      "reservation": "Reservation",
+      "feedback": "Feedback",
+      "other": "Other"
+    },
+    "message": "Your message",
+    "send": "Send Message",
+    "success": "Thank you. We will get back to you soon.",
+    "error": "Something went wrong. Please try again.",
+    "locationTitle": "Our location",
+    "address": "J8M9+46F, Poschim Para, Ctb Beach Road\nSaint Martin Island, Bangladesh",
+    "phoneTitle": "Phone & WhatsApp",
+    "phoneValue": "+880 1839-425157",
+    "emailTitle": "Email",
+    "emailValue": "stamarbariresort@gmail.com",
+    "hoursTitle": "Check-in hours",
+    "hoursValue": "Check-in: {checkIn}\nCheck-out: {checkOut}",
+    "hoursFallback": "Check-in and check-out times are published by the resort.",
+    "call": "Call",
+    "whatsapp": "WhatsApp",
+    "maps": "Open in Google Maps",
+    "mapTitle": "Map of S T Amar Bari Resort",
+    "detailsEyebrow": "Reach the resort",
+    "mapEyebrow": "Find us",
+    "eyebrow": "Saint Martin Island"
+  },
+  "common": {
+    "loading": "Loading…",
+    "retry": "Please try again.",
+    "error": "Something went wrong. Please try again.",
+    "emptyOffers": "No offers are currently available.",
+    "emptyBlog": "No blog posts yet.",
+    "call": "Call",
+    "whatsapp": "WhatsApp",
+    "language": "Language",
+    "readMore": "Read more",
+    "back": "Back"
+  },
+  "home": {
+    "welcomeEyebrow": "Welcome to Amar Bari",
+    "welcomeLead": "A quiet island home,",
+    "welcomeAccent": "kept simple and warm",
+    "welcomeBig": "Saint Martin",
+    "welcomeSignature": "The Amar Bari family",
+    "roomCategories": "Room categories",
+    "stats": [
+      {
+        "value": "1",
+        "label": "Coral island in Bangladesh"
+      },
+      {
+        "value": "9 km",
+        "label": "Off the Teknaf coast"
+      },
+      {
+        "value": "8 km²",
+        "label": "Of island to wander"
+      }
+    ],
+    "experiencesEyebrow": "Island days",
+    "experiencesLead": "Moments that",
+    "experiencesAccent": "find you here",
+    "experiencesIntro": "Saint Martin is small enough to walk and slow enough to notice. These are the days guests remember.",
+    "experiences": [
+      {
+        "title": "Turquoise mornings",
+        "body": "Clear water and an empty shore before the first boats arrive."
+      },
+      {
+        "title": "Chhera Dwip",
+        "body": "The island's southern tip, reached at low tide or by a short boat ride."
+      },
+      {
+        "title": "Coral shores",
+        "body": "Rock pools and coral stones along Bangladesh's only coral coast."
+      },
+      {
+        "title": "Fresh from the sea",
+        "body": "The day's catch, grilled simply at the island's beachside stalls."
+      },
+      {
+        "title": "Coconut groves",
+        "body": "Shaded paths between palms and village gardens, at an island pace."
+      },
+      {
+        "title": "Island evenings",
+        "body": "Quiet nights, a sky full of stars and the sound of the tide."
+      }
+    ],
+    "experiencesSwipe": "Swipe to explore",
+    "roomsEyebrow": "Accommodation",
+    "roomsLead": "Garden-view rooms,",
+    "roomsAccent": "made for slow days",
+    "roomsEmpty": "Room details are being published. Call or WhatsApp the resort for availability.",
+    "roomsView": "View room",
+    "islandEyebrow": "The island",
+    "islandLead": "Bangladesh's",
+    "islandAccent": "coral island",
+    "islandBody": "Nine kilometres off the Teknaf coast, Saint Martin is a small island of coconut palms, coral shores and fishing villages. Ships run in season, and schedules change, so always confirm before you travel.",
+    "islandBody2": "We share honest notes on getting here, the tides, the weather and what to pack.",
+    "islandCta": "Read the island guide",
+    "islandCaption": "Saint Martin from above",
+    "galleryEyebrow": "Gallery",
+    "galleryLead": "Moments from",
+    "galleryAccent": "the island",
+    "whyEyebrow": "Book with the family",
+    "whyLead": "Why book",
+    "whyAccent": "direct",
+    "whyIntro": "When you book here, you speak with the resort itself — no middlemen, no surprises.",
+    "offersEyebrow": "Stay notes",
+    "offersLead": "Current",
+    "offersAccent": "offers",
+    "offersCta": "All offers",
+    "testimonialsEyebrow": "Guest words",
+    "testimonialsLead": "Kind words",
+    "testimonialsAccent": "from our guests",
+    "previous": "Previous",
+    "next": "Next",
+    "ctaEyebrow": "Your stay",
+    "ctaLead": "Come home",
+    "ctaAccent": "to the island",
+    "ctaWhatsapp": "WhatsApp the resort",
+    "badgeName": "Amar Bari",
+    "badgeMeaning": "“My Home”"
+  },
+  "lightbox": {
+    "close": "Close",
+    "next": "Next photo",
+    "previous": "Previous photo",
+    "counter": "{current} / {total}",
+    "open": "Open photo {index}",
+    "viewAll": "View all photos",
+    "dialog": "Photo viewer"
+  },
+  "credits": {
+    "title": "Photo credits",
+    "subtitle": "Atmosphere photographs of Saint Martin Island used across this site",
+    "intro": "Island and beach photographs on this site are used under open licences from Wikimedia Commons, with thanks to the photographers. Photographs of the resort itself are published by the family.",
+    "by": "Photo by {author}",
+    "source": "View source",
+    "eyebrow": "With thanks",
+    "licence": "Licence: {license}"
+  },
+  "mobileBar": {
+    "book": "Book your stay",
+    "from": "Direct booking"
+  },
+  "roomDetail": {
+    "eyebrow": "Garden-view room",
+    "back": "All rooms",
+    "overview": "Overview",
+    "details": "Room details",
+    "view": "View",
+    "occupancy": "Occupancy",
+    "occupancyValue": "Up to {count} guests",
+    "children": "Children",
+    "childrenValue": "Up to {count}",
+    "price": "Price",
+    "priceValue": "{price} / night",
+    "onRequest": "On request",
+    "amenities": "Amenities & features",
+    "honest": "Air conditioning, Wi-Fi and television are not currently available.",
+    "policies": "Policies",
+    "checkTimes": "Check-in & check-out",
+    "checkIn": "Check-in: {time}",
+    "checkOut": "Check-out: {time}",
+    "cancellation": "Cancellation policy",
+    "cancellationBody": "Cancellations made at least {hours} hours before check-in may receive a {refund}% refund of the advance, unless the resort publishes a different policy.",
+    "missedShip": "If a guest misses their ship, no refund is issued.",
+    "houseRules": "House rules",
+    "houseRulesFallback": "House rules are maintained by the resort team and can be updated from the admin.",
+    "photosSoon": "Room photographs will appear here when published",
+    "viewAll": "View all photos ({count})",
+    "reserve": "Reserve this room"
+  },
+  "bookingPanel": {
+    "title": "Reserve your stay",
+    "rooms": "Number of rooms",
+    "roomsLabel": "rooms",
+    "checking": "Checking availability…",
+    "available": "{count, plural, one {# room} other {# rooms}} available for selected dates",
+    "guests": "Guests (max {max})",
+    "adultsLabel": "adults",
+    "childrenLabel": "children",
+    "extra": "Extra mattress",
+    "extraPrice": "({price}/night)",
+    "extraLabel": "extra mattress",
+    "extraMax": "Maximum {max} extra mattresses for {count, plural, one {# room} other {# rooms}}",
+    "notes": "Additional notes",
+    "notesPlaceholder": "Special requests, dietary requirements, etc.",
+    "guestDetails": "Guest details",
+    "fullName": "Full name",
+    "phone": "Phone",
+    "email": "Email",
+    "optional": "(optional)",
+    "lineRooms": "{price} × {rooms, plural, one {# room} other {# rooms}} × {nights, plural, one {# night} other {# nights}}",
+    "extraLine": "Extra mattress",
+    "subtotal": "Subtotal",
+    "advance": "Advance ({percent}%)",
+    "remaining": "Remaining at resort",
+    "total": "Total",
+    "priceNote": "Prices are calculated by the resort. If a guest misses their ship, no refund is issued.",
+    "book": "Book Now",
+    "starting": "Starting payment…",
+    "whatsapp": "WhatsApp Resort",
+    "whatsappText": "Hello, I would like to book {room} from {checkIn} to {checkOut}.",
+    "errOrder": "Check-out date must be after check-in.",
+    "errNone": "No rooms available for these dates.",
+    "errCheck": "We couldn't check availability right now. Please try again.",
+    "errGuest": "Please add your name and phone to continue.",
+    "errGone": "This room is no longer available. Please select another room.",
+    "errPayment": "Payment could not be started. Please try again.",
+    "errGeneric": "Something went wrong. Please try again.",
+    "decrease": "Decrease {label}",
+    "increase": "Increase {label}",
+    "secure": "Your room is confirmed only after the payment is verified by the resort's server."
+  },
+  "bookingPage": {
+    "title": "Book your",
+    "accent": "stay",
+    "subtitle": "Choose a room, then check dates and complete your booking.",
+    "loadError": "We couldn't load rooms right now.",
+    "upTo": "Up to {count} guests",
+    "bookRoom": "Book this room",
+    "loading": "Loading…",
+    "choose": "Choose your room"
+  },
+  "bookingStatus": {
+    "successTitle": "Your stay is",
+    "successAccent": "confirmed",
+    "failedTitle": "Payment not",
+    "failedAccent": "completed",
+    "verifyTitle": "Confirming your",
+    "verifyAccent": "payment",
+    "loadingConfirmation": "Loading your confirmation…",
+    "checkInOut": "Check-in {checkIn} · Check-out {checkOut}",
+    "room": "Room",
+    "dates": "Dates",
+    "status": "Booking status: {status}",
+    "failedNote": "If money was deducted, please contact the resort with your booking number. We only confirm stays after server-side payment verification.",
+    "verifying": "Confirming your payment…",
+    "missingRef": "Missing booking reference.",
+    "verifyError": "Payment could not be verified yet."
+  },
+  "cookie": {
+    "label": "Cookie preferences",
+    "body": "We use essential cookies to run bookings. Analytics and marketing cookies load only if you allow them.",
+    "essential": "Essential only",
+    "allow": "Allow analytics"
+  },
+  "packagesPage": {
+    "title": "Packages",
+    "subtitle": "Stay packages published by the resort",
+    "empty": "Packages will appear here when published.",
+    "badge": "Package",
+    "eyebrow": "Stay packages"
+  },
+  "cmsPages": {
+    "experienceTitle": "Experience",
+    "experienceSubtitle": "Island days around S T Amar Bari",
+    "ourStoryTitle": "Our Story",
+    "ourStorySubtitle": "How Amar Bari became a home on the island",
+    "experienceEyebrow": "Island days",
+    "ourStoryEyebrow": "Amar Bari",
+    "asideTitle": "Questions about your stay?",
+    "asideBody": "The family answers calls and WhatsApp messages directly.",
+    "onThisPage": "On this page"
+  },
+  "notFound": {
+    "title": "Page not",
+    "accent": "found",
+    "body": "The page you are looking for has moved or no longer exists.",
+    "home": "Back to home"
+  }
+}

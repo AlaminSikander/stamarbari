@@ -1,0 +1,206 @@
+export type StockImage = {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+  author: string;
+  license: string;
+  source: string;
+};
+
+const commons = (file: string) => `https://commons.wikimedia.org/wiki/File:${file}`;
+
+/** Real Saint Martin's Island photography used until the admin uploads resort media. */
+export const stock = {
+  heroSunrise: {
+    src: "/images/stock/hero-sunrise.webp",
+    alt: "Sunrise over the Bay of Bengal from Saint Martin's Island, palms silhouetted on the shore",
+    width: 2400,
+    height: 1094,
+    author: "Nawroz Sizan",
+    license: "CC BY-SA 4.0",
+    source: commons("A_refreshing_sun_rise_in_Saint_Martin%27s_Island,_Bangladesh.jpg"),
+  },
+  aerialIsland: {
+    src: "/images/stock/aerial-island.webp",
+    alt: "Aerial view of Saint Martin's Island stretching into the sea at sunrise",
+    width: 2304,
+    height: 921,
+    author: "Khondoker Zobaed",
+    license: "CC BY 4.0",
+    source: commons("Aerial_panoramic_view_of_Saint_Martin%E2%80%99s_Island_at_sunrise,_Bangladesh.jpg"),
+  },
+  sunsetBoat: {
+    src: "/images/stock/sunset-boat.webp",
+    alt: "Fishing boat at sunset off Saint Martin's Island",
+    width: 2400,
+    height: 1800,
+    author: "Nomadlifebd",
+    license: "CC BY-SA 4.0",
+    source: commons("Fisherman_Life_In_Saint_Martin%E2%80%99s_Island.jpg"),
+  },
+  turquoiseShore: {
+    src: "/images/stock/turquoise-shore.webp",
+    alt: "Turquoise water along the beach of Saint Martin's Island",
+    width: 2000,
+    height: 1125,
+    author: "Muminur Rahman",
+    license: "CC BY-SA 4.0",
+    source: commons("A_View_of_Saint_Martin_Beach.jpg"),
+  },
+  coconutPalms: {
+    src: "/images/stock/coconut-palms.webp",
+    alt: "Tall coconut palms against a clear sky on Saint Martin's Island",
+    width: 1600,
+    height: 1200,
+    author: "Ismailim",
+    license: "CC BY-SA 4.0",
+    source: commons("Coconut_garden_Saint_Martins_Island.jpg"),
+  },
+  coconutGarden: {
+    src: "/images/stock/coconut-garden.webp",
+    alt: "A quiet coconut garden on Saint Martin's Island",
+    width: 2000,
+    height: 1255,
+    author: "Fahad Faisal",
+    license: "CC BY-SA 4.0",
+    source: commons("Coconut_Tree_at_Saint_Martin_Island.JPG"),
+  },
+  sandRipples: {
+    src: "/images/stock/sand-ripples.webp",
+    alt: "Rippled sand and a lone boat on a calm Saint Martin beach",
+    width: 2400,
+    height: 1800,
+    author: "Muhaisin",
+    license: "CC BY-SA 4.0",
+    source: commons("A_song_of_two_blues_and_a_gray.jpg"),
+  },
+  palmBeach: {
+    src: "/images/stock/palm-beach.webp",
+    alt: "Palm-lined beach at Chhera Dwip",
+    width: 1600,
+    height: 1200,
+    author: "Zogatal",
+    license: "CC BY-SA 4.0",
+    source: commons("Cheradip_saint_martin.jpg"),
+  },
+  islandShore: {
+    src: "/images/stock/island-shore.webp",
+    alt: "Blue sea and shoreline trees on Saint Martin's Island",
+    width: 2000,
+    height: 912,
+    author: "Nawroz Sizan",
+    license: "CC BY-SA 4.0",
+    source: commons("For_those_who_need_Vitamin_SEA.jpg"),
+  },
+  chhera: {
+    src: "/images/stock/chhera-dwip.webp",
+    alt: "Coral beach of Chhera Dwip at low tide",
+    width: 2000,
+    height: 1472,
+    author: "Minhas Kamal",
+    license: "CC0",
+    source: commons("Coral_Sea_Beach_of_Chera_Dwip,_Saint_Martin%27s_Island_(26629378198).jpg"),
+  },
+  leaningPalm: {
+    src: "/images/stock/leaning-palm.webp",
+    alt: "A palm leaning over the waves on Saint Martin's Island",
+    width: 1600,
+    height: 1200,
+    author: "Ismailim",
+    license: "CC BY-SA 4.0",
+    source: commons("Saint_Martin_Bangladesh.jpg"),
+  },
+  seafood: {
+    src: "/images/stock/seafood-bbq.webp",
+    alt: "Fresh koral fish grilled on the beach at Saint Martin's Island",
+    width: 1600,
+    height: 1060,
+    author: "Minhas Kamal",
+    license: "CC0",
+    source: commons("Koral_Fish_BBQ_in_Sea_Beach_(40486545232).jpg"),
+  },
+  beachChairs: {
+    src: "/images/stock/beach-chairs.webp",
+    alt: "Beach chairs and umbrellas on Saint Martin's shore",
+    width: 1600,
+    height: 1200,
+    author: "Masum-al-Hasan Rocky",
+    license: "CC BY-SA 4.0",
+    source: commons("Kitkot_chairs_at_st._martin.jpg"),
+  },
+  pandanus: {
+    src: "/images/stock/pandanus.webp",
+    alt: "Keya (pandanus) branches against the sky",
+    width: 1600,
+    height: 1067,
+    author: "কামরুল ইসলাম শাহীন",
+    license: "CC BY-SA 4.0",
+    source: commons("Plant_of_Saintmarin_2.jpg"),
+  },
+  lighthouse: {
+    src: "/images/stock/lighthouse-night.webp",
+    alt: "The Saint Martin lighthouse under a moonlit sky",
+    width: 1600,
+    height: 1200,
+    author: "Masum-al-Hasan Rocky",
+    license: "CC BY-SA 4.0",
+    source: commons("Light_house_at_St._Martin%27s_Island.jpg"),
+  },
+  islandLife: {
+    src: "/images/stock/island-life.webp",
+    alt: "A fisherman carrying the morning catch along the shore",
+    width: 1600,
+    height: 1067,
+    author: "Anik Sarker",
+    license: "CC BY-SA 4.0",
+    source: commons("Life_at_St._Martin%27s_Island.jpg"),
+  },
+  coral: {
+    src: "/images/stock/coral.webp",
+    alt: "Brain coral found on Saint Martin's Island",
+    width: 1600,
+    height: 1067,
+    author: "Syed Sajidul Islam",
+    license: "CC BY-SA 4.0",
+    source: commons("Coral_in_the_St._Martin%27s_Island.jpg"),
+  },
+  keya: {
+    src: "/images/stock/keya-bushes.webp",
+    alt: "Keya bushes along the rocky coast of Chhera Dwip",
+    width: 1600,
+    height: 900,
+    author: "Labib Ittihadul",
+    license: "CC BY 2.0",
+    source: commons("Chera_Dip_of_Saint_Martin_Island,_Bangladesh_-_22093303906.jpg"),
+  },
+  coastline: {
+    src: "/images/stock/coastline.webp",
+    alt: "Rocky coastline and green canopy at Chhera Dwip",
+    width: 2000,
+    height: 1125,
+    author: "Labib Ittihadul",
+    license: "CC BY 2.0",
+    source: commons("Chera_Dip_of_Saint_Martin_Island,_Bangladesh_-_21931603398.jpg"),
+  },
+} satisfies Record<string, StockImage>;
+
+export type StockKey = keyof typeof stock;
+
+/** Default hero image for each secondary route; CMS and admin uploads take precedence. */
+export const pageHeroDefaults: Record<string, StockImage> = {
+  rooms: stock.coconutPalms,
+  gallery: stock.sandRipples,
+  about: stock.coconutGarden,
+  "our-story": stock.islandLife,
+  experience: stock.chhera,
+  contact: stock.turquoiseShore,
+  offers: stock.beachChairs,
+  packages: stock.palmBeach,
+  blog: stock.leaningPalm,
+  faq: stock.islandShore,
+  "saint-martin": stock.aerialIsland,
+  booking: stock.sunsetBoat,
+  legal: stock.sandRipples,
+  credits: stock.pandanus,
+};

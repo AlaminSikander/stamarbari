@@ -3,7 +3,7 @@
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
-import { apiPost, formatBdt, ApiRequestError } from "@/lib/api";
+import { API_URL, apiPost, formatBdt, ApiRequestError } from "@/lib/api";
 import type { AvailabilityResult, BookingPayload } from "@/lib/types";
 import { Link } from "@/i18n/navigation";
 
@@ -61,11 +61,11 @@ export function BookingClient() {
   }, [searchKey, checkIn, checkOut, adults, children, roomCategoryId, t]);
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api/v1"}/meal-plans`)
+    fetch(`${API_URL}/meal-plans`)
       .then((r) => r.json())
       .then((json) => setMeals(json.data ?? []))
       .catch(() => undefined);
-    fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api/v1"}/addons`)
+    fetch(`${API_URL}/addons`)
       .then((r) => r.json())
       .then((json) => setAddons(json.data ?? []))
       .catch(() => undefined);

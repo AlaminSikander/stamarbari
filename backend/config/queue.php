@@ -33,6 +33,9 @@ return [
 
         'sync' => [
             'driver' => 'sync',
+            // Jobs dispatched inside a transaction (e.g. invoice generation on payment) run only after
+            // it commits, so a failing job cannot roll back a confirmed payment.
+            'after_commit' => true,
         ],
 
         'database' => [

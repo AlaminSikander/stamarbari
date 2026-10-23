@@ -53,4 +53,8 @@ return [
         'key' => env('SMS_API_KEY'),
     ],
 
+    'cron' => [
+        'secret' => env('CRON_SECRET'),
+    ],
+
 ];

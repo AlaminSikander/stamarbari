@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\V1\ContactController;
 use App\Http\Controllers\Api\V1\ContentController;
 use App\Http\Controllers\Api\V1\PaymentController;
 use App\Http\Controllers\Api\V1\RoomController;
+use App\Http\Controllers\Api\V1\ScheduleController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/rooms', [RoomController::class, 'index']);
@@ -39,3 +40,5 @@ Route::get('/homepage', [ContentController::class, 'homepage']);
 
 Route::post('/contact', [ContactController::class, 'store'])->middleware('throttle:8,1');
 Route::post('/inquiries', [ContactController::class, 'inquiry'])->middleware('throttle:8,1');
+
+Route::get('/cron/schedule', ScheduleController::class)->middleware('throttle:10,1');

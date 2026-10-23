@@ -1,0 +1,39 @@
+# Laravel + Filament image for the "backend" Vercel service (see ../vercel.json).
+FROM composer:2 AS vendor
+WORKDIR /app
+COPY composer.json composer.lock ./
+RUN composer install --no-dev --no-scripts --no-autoloader --no-interaction --prefer-dist --ignore-platform-reqs
+
+FROM php:8.4-apache
+
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
+RUN install-php-extensions bcmath exif gd intl opcache pdo_mysql zip
+
+# Vercel routes container traffic to $PORT (default 80).
+ENV PORT=80 \
+    APACHE_DOCUMENT_ROOT=/var/www/html/public \
+    APP_ENV=production \
+    APP_DEBUG=false \
+    LOG_CHANNEL=stderr \
+    TRUSTED_PROXIES=* \
+    QUEUE_CONNECTION=sync \
+    FILE_STORAGE=s3
+
+RUN a2enmod rewrite headers \
+    && sed -ri 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf \
+    && sed -ri '/<Directory \/var\/www\/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf \
+    && sed -ri 's/^Listen 80$/Listen ${PORT}/' /etc/apache2/ports.conf \
+    && sed -ri 's/<VirtualHost \*:80>/<VirtualHost *:${PORT}>/' /etc/apache2/sites-available/000-default.conf \
+    && mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+
+WORKDIR /var/www/html
+COPY --from=vendor /usr/bin/composer /usr/bin/composer
+COPY --from=vendor /app/vendor ./vendor
+COPY . .
+
+# post-autoload-dump runs package:discover and filament:upgrade, which publishes the Filament assets.
+RUN composer dump-autoload --optimize --no-dev --no-interaction \
+    && chown -R www-data:www-data storage bootstrap/cache \
+    && chmod +x docker/vercel/start.sh
+
+CMD ["docker/vercel/start.sh"]

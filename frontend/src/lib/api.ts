@@ -1,13 +1,28 @@
 import type { ApiError, ApiSuccess } from "./types";
 
-export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api/v1";
+/** Public API base for the browser and for links. Defaults are set in next.config.ts. */
+export const API_URL = (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api/v1").replace(/\/$/, "");
 export const API_ORIGIN = API_URL.replace(/\/api\/v1\/?$/, "");
+/** Public base URL of the uploads bucket when the backend stores files in S3 (FILE_STORAGE=s3). */
+const MEDIA_URL = (process.env.NEXT_PUBLIC_MEDIA_URL ?? "").replace(/\/$/, "");
+
+/**
+ * Base for API requests. On the server, Vercel's backend service binding (BACKEND_INTERNAL_URL) is
+ * preferred so server-rendered pages call Laravel directly. The binding only exists in functions at
+ * runtime, not during `next build`, so build-time fetches use the public URL and fall back on failure.
+ */
+function requestBase(): string {
+  const internal = typeof window === "undefined" ? process.env.BACKEND_INTERNAL_URL : undefined;
+  if (!internal) return API_URL;
+  return new URL("api/v1", internal.endsWith("/") ? internal : `${internal}/`).toString();
+}
 
 export function mediaUrl(path: string | null | undefined): string | null {
   if (!path) return null;
   if (path.startsWith("http://") || path.startsWith("https://")) return path;
   if (path.startsWith("/brand/") || path.startsWith("/images/")) return path;
   const clean = path.replace(/^\//, "");
+  if (MEDIA_URL) return `${MEDIA_URL}/${clean.replace(/^storage\//, "")}`;
   if (clean.startsWith("storage/")) return `${API_ORIGIN}/${clean}`;
   return `${API_ORIGIN}/storage/${clean}`;
 }
@@ -24,7 +39,7 @@ export class ApiRequestError extends Error {
 
 export async function apiGet<T>(path: string, locale = "en"): Promise<T> {
   const separator = path.includes("?") ? "&" : "?";
-  const response = await fetch(`${API_URL}${path}${separator}locale=${locale}`, {
+  const response = await fetch(`${requestBase()}${path}${separator}locale=${locale}`, {
     next: path.includes("availability") || path.includes("booking") || path.startsWith("/rooms") || path.startsWith("/blog") || path.startsWith("/offers") || path.startsWith("/pages") || path.startsWith("/faqs")
       ? { revalidate: 0 }
       : { revalidate: 120 },
@@ -34,7 +49,7 @@ export async function apiGet<T>(path: string, locale = "en"): Promise<T> {
 }
 
 export async function apiPost<T>(path: string, body: unknown): Promise<T> {
-  const response = await fetch(`${API_URL}${path}`, {
+  const response = await fetch(`${requestBase()}${path}`, {
     method: "POST",
     cache: "no-store",
     headers: {

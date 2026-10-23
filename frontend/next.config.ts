@@ -3,12 +3,17 @@ import createNextIntlPlugin from "next-intl/plugin";
 
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
-const apiUrl = new URL(process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api/v1");
+// On Vercel the API is same-origin: vercel.json routes /api/* to the backend service.
+const publicApiUrl =
+  process.env.NEXT_PUBLIC_API_URL || (process.env.VERCEL ? "/api/v1" : "http://localhost:8000/api/v1");
+const apiUrl = URL.canParse(publicApiUrl) ? new URL(publicApiUrl) : null;
+const mediaUrl = URL.canParse(process.env.NEXT_PUBLIC_MEDIA_URL ?? "") ? new URL(process.env.NEXT_PUBLIC_MEDIA_URL!) : null;
 
-// The admin dashboard (Laravel + Filament) is served from this site at /admin. Requests for
-// it, and for the Livewire/Filament assets it loads, are proxied to the Laravel app.
+// The admin dashboard (Laravel + Filament) is served from this site at /admin. Outside Vercel,
+// requests for it and for the Livewire/Filament assets it loads are proxied to the Laravel app here;
+// on Vercel the top-level rewrites in vercel.json route them to the backend service instead.
 // Rewrites are fixed at build time, so set BACKEND_ORIGIN before `next build`.
-const backendOrigin = (process.env.BACKEND_ORIGIN || apiUrl.origin).replace(/\/$/, "");
+const backendOrigin = (process.env.BACKEND_ORIGIN || (process.env.VERCEL ? "" : apiUrl?.origin) || "").replace(/\/$/, "");
 const adminPaths = [
   "/admin",
   "/admin/:path*",
@@ -22,9 +27,12 @@ const adminPaths = [
 
 const nextConfig: NextConfig = {
   output: "standalone",
+  env: { NEXT_PUBLIC_API_URL: publicApiUrl },
   async rewrites() {
     return {
-      beforeFiles: adminPaths.map((source) => ({ source, destination: `${backendOrigin}${source}` })),
+      beforeFiles: backendOrigin
+        ? adminPaths.map((source) => ({ source, destination: `${backendOrigin}${source}` }))
+        : [],
       afterFiles: [],
       fallback: [],
     };
@@ -33,12 +41,26 @@ const nextConfig: NextConfig = {
     formats: ["image/avif", "image/webp"],
     qualities: [70, 75, 85],
     remotePatterns: [
-      {
-        protocol: apiUrl.protocol.replace(":", "") as "http" | "https",
-        hostname: apiUrl.hostname,
-        port: apiUrl.port,
-        pathname: "/storage/**",
-      },
+      ...(apiUrl
+        ? [
+            {
+              protocol: apiUrl.protocol.replace(":", "") as "http" | "https",
+              hostname: apiUrl.hostname,
+              port: apiUrl.port,
+              pathname: "/storage/**",
+            },
+          ]
+        : []),
+      ...(mediaUrl
+        ? [
+            {
+              protocol: mediaUrl.protocol.replace(":", "") as "http" | "https",
+              hostname: mediaUrl.hostname,
+              port: mediaUrl.port,
+              pathname: `${mediaUrl.pathname.replace(/\/$/, "")}/**`,
+            },
+          ]
+        : []),
       { protocol: "http", hostname: "localhost" },
       { protocol: "https", hostname: "**.stamarbariresort.com" },
     ],

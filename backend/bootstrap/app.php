@@ -17,9 +17,10 @@ return Application::configure(basePath: dirname(__DIR__))
         apiPrefix: 'api/v1',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        // The Next.js site proxies /admin to Laravel and sends X-Forwarded-Host, so admin
-        // links and redirects point at the public site origin instead of Laravel's port.
-        $middleware->trustProxies(at: array_filter(array_map('trim', explode(',', (string) (env('TRUSTED_PROXIES') ?: '127.0.0.1,::1')))));
+        // The site proxies /admin to Laravel (Next.js locally, Vercel routing in production) and sends
+        // X-Forwarded-Host, so admin links and redirects point at the public site origin.
+        // Kept as a string: Laravel only honours "*" (trust any proxy) in string form.
+        $middleware->trustProxies(at: (string) (env('TRUSTED_PROXIES') ?: '127.0.0.1,::1'));
         $middleware->redirectGuestsTo('/admin/login');
     })
     ->withExceptions(function (Exceptions $exceptions): void {

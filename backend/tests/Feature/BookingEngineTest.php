@@ -4,8 +4,8 @@ namespace Tests\Feature;
 
 use App\Enums\BookingStatus;
 use App\Enums\PaymentStatus;
+use App\Exceptions\BookingException;
 use App\Jobs\ExpireBookingHoldsJob;
-use App\Models\Booking;
 use App\Models\Coupon;
 use App\Models\Room;
 use App\Models\RoomBlock;
@@ -13,6 +13,7 @@ use App\Models\RoomCategory;
 use App\Models\User;
 use App\Services\BookingService;
 use App\Services\PaymentService;
+use App\Services\RefundService;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -29,7 +30,7 @@ class BookingEngineTest extends TestCase
 
     public function test_availability_search_returns_priced_rooms(): void
     {
-        $category = RoomCategory::query()->where('slug', 'deluxe-couple')->first();
+        $category = RoomCategory::query()->where('slug', 'nokkhotro')->first();
 
         $response = $this->postJson('/api/v1/availability', [
             'check_in' => now()->addDays(10)->toDateString(),
@@ -50,14 +51,14 @@ class BookingEngineTest extends TestCase
         $first = app(BookingService::class)->createHold($payload);
         $this->assertSame(BookingStatus::Pending, $first->status);
 
-        $category = RoomCategory::query()->where('slug', 'deluxe-couple')->first();
+        $category = RoomCategory::query()->where('slug', 'nokkhotro')->first();
         $activeRooms = Room::query()->where('room_category_id', $category->id)->where('is_active', true)->count();
 
         for ($i = 1; $i < $activeRooms; $i++) {
             app(BookingService::class)->createHold($payload);
         }
 
-        $this->expectException(\App\Exceptions\BookingException::class);
+        $this->expectException(BookingException::class);
         app(BookingService::class)->createHold($payload);
     }
 
@@ -76,7 +77,7 @@ class BookingEngineTest extends TestCase
 
     public function test_room_block_hides_availability(): void
     {
-        $category = RoomCategory::query()->where('slug', 'deluxe-couple')->first();
+        $category = RoomCategory::query()->where('slug', 'nokkhotro')->first();
         foreach (Room::query()->where('room_category_id', $category->id)->get() as $room) {
             RoomBlock::query()->create([
                 'room_id' => $room->id,
@@ -172,6 +173,43 @@ class BookingEngineTest extends TestCase
         $this->assertGreaterThan(1, (float) $booking->grand_total);
     }
 
+    public function test_advance_is_half_of_the_total(): void
+    {
+        $booking = app(BookingService::class)->createHold($this->holdPayload());
+
+        $this->assertEquals(round((float) $booking->grand_total / 2, 2), (float) $booking->advance_amount);
+        $this->assertSame(50, $booking->price_breakdown['advance_percent']);
+    }
+
+    public function test_cancellation_four_or_more_days_out_refunds_seventy_percent_of_advance(): void
+    {
+        $booking = app(BookingService::class)->createHold($this->holdPayload());
+        $booking->update(['amount_paid' => $booking->advance_amount]);
+        $refunds = app(RefundService::class);
+
+        $fourDaysBefore = $booking->check_in->copy()->subDays(4)->setTime(23, 0);
+        $this->assertEquals(
+            round((float) $booking->advance_amount * 0.7, 2),
+            $refunds->policyRefundAmount($booking, $fourDaysBefore),
+        );
+
+        $threeDaysBefore = $booking->check_in->copy()->subDays(3)->setTime(8, 0);
+        $this->assertEquals(0.0, $refunds->policyRefundAmount($booking, $threeDaysBefore));
+    }
+
+    public function test_extra_mattress_is_not_offered(): void
+    {
+        $this->getJson('/api/v1/bookings/policies')
+            ->assertOk()
+            ->assertJsonMissingPath('data.extra_bed_available')
+            ->assertJsonMissingPath('data.extra_bed_price');
+
+        $payload = $this->holdPayload();
+        $payload['extra_beds'] = 2;
+        $booking = app(BookingService::class)->createHold($payload);
+        $this->assertArrayNotHasKey('extra_bed_total', $booking->price_breakdown);
+    }
+
     public function test_receptionist_cannot_process_refunds_without_permission(): void
     {
         $user = User::factory()->create();
@@ -185,7 +223,7 @@ class BookingEngineTest extends TestCase
      */
     private function holdPayload(): array
     {
-        $category = RoomCategory::query()->where('slug', 'deluxe-couple')->first();
+        $category = RoomCategory::query()->where('slug', 'nokkhotro')->first();
 
         return [
             'check_in' => now()->addDays(20)->toDateString(),

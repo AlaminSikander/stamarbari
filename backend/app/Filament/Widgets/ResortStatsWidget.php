@@ -19,6 +19,9 @@ class ResortStatsWidget extends StatsOverviewWidget
             Stat::make("Today's arrivals", Booking::query()->whereDate('check_in', $today)->whereIn('status', [BookingStatus::Confirmed, BookingStatus::CheckedIn])->count()),
             Stat::make("Today's departures", Booking::query()->whereDate('check_out', $today)->whereIn('status', [BookingStatus::CheckedIn, BookingStatus::Confirmed])->count()),
             Stat::make('Current guests', Booking::query()->where('status', BookingStatus::CheckedIn)->count()),
+            Stat::make('Awaiting confirmation', Booking::query()->where('status', BookingStatus::PendingConfirmation)->count())
+                ->description('Booking requests to confirm')
+                ->color('warning'),
             Stat::make('Pending bookings', Booking::query()->where('status', BookingStatus::Pending)->count()),
             Stat::make('Pending payments', Payment::query()->where('status', 'pending')->count()),
             Stat::make('Confirmed bookings', Booking::query()->where('status', BookingStatus::Confirmed)->count()),

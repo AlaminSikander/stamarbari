@@ -11,15 +11,18 @@ import { RoomCard } from "./RoomCard";
 export function RoomsGrid({ rooms }: { rooms: RoomSummary[] }) {
   const t = useTranslations("roomsPage");
   const reduce = useReducedMotion();
-  const views = Array.from(new Set(rooms.map((room) => room.view).filter((view): view is string => Boolean(view))));
+  const types = new Map<string, string>();
+  for (const room of rooms) {
+    if (room.room_type && room.room_type_label) types.set(room.room_type, room.room_type_label);
+  }
   const [filter, setFilter] = useState<string>("all");
-  const visible = filter === "all" ? rooms : rooms.filter((room) => room.view === filter);
-  const options = [{ id: "all", label: t("all") }, ...views.map((view) => ({ id: view, label: view }))];
+  const visible = filter === "all" ? rooms : rooms.filter((room) => room.room_type === filter);
+  const options = [{ id: "all", label: t("all") }, ...Array.from(types, ([id, label]) => ({ id, label }))];
 
   return (
     <div>
       <div className="flex flex-col items-center gap-6">
-        {views.length > 1 ? (
+        {types.size > 1 ? (
           <div role="group" aria-label={t("filterLabel")} className="flex flex-wrap justify-center gap-1 rounded-full border border-line bg-white/70 p-1.5">
             {options.map((option) => {
               const active = filter === option.id;

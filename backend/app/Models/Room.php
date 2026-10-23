@@ -15,12 +15,12 @@ class Room extends Model
 
     protected function casts(): array
     {
-        return ['is_active' => 'boolean', 'extra_bed_allowed' => 'boolean'];
+        return ['is_active' => 'boolean'];
     }
 
     public function category(): BelongsTo
     {
-        return $this->belongsTo(RoomCategory::class, 'room_category_id');
+        return $this->belongsTo(RoomCategory::class, 'room_category_id')->withTrashed();
     }
 
     public function blocks(): HasMany

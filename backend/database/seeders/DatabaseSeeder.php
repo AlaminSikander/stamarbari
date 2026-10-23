@@ -10,10 +10,7 @@ use App\Models\GalleryCategory;
 use App\Models\MealPlan;
 use App\Models\NotificationTemplate;
 use App\Models\Offer;
-use App\Models\Room;
 use App\Models\RoomAmenity;
-use App\Models\RoomCategory;
-use App\Models\RoomPrice;
 use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -68,13 +65,11 @@ class DatabaseSeeder extends Seeder
             'check_in_time' => '12:00',
             'check_out_time' => '10:00',
             'child_policy_age' => '7',
-            'cancellation_hours' => '24',
-            'cancellation_refund_percent' => '100',
+            'cancellation_days' => '4',
+            'cancellation_refund_percent' => '70',
             'missed_ship_refund' => '0',
-            'advance_percent' => '30',
+            'advance_percent' => '50',
             'booking_hold_minutes' => '15',
-            'extra_bed_available' => '1',
-            'extra_bed_price' => '0',
             'timezone' => 'Asia/Dhaka',
             'google_reviews_url' => '',
             'tripadvisor_url' => '',
@@ -95,70 +90,14 @@ class DatabaseSeeder extends Seeder
             Setting::setValue($key, $value);
         }
 
-        $garden = RoomAmenity::query()->updateOrCreate(['slug' => 'garden-view'], ['name_en' => 'Garden view', 'name_bn' => 'বাগানের দৃশ্য', 'is_available' => true]);
-        $bath = RoomAmenity::query()->updateOrCreate(['slug' => 'attached-bathroom'], ['name_en' => 'Attached bathroom', 'name_bn' => 'সংযুক্ত বাথরুম', 'is_available' => true]);
-        $hot = RoomAmenity::query()->updateOrCreate(['slug' => 'hot-water'], ['name_en' => 'Hot water', 'name_bn' => 'গরম পানি', 'is_available' => true]);
+        RoomAmenity::query()->updateOrCreate(['slug' => 'garden-view'], ['name_en' => 'Garden view', 'name_bn' => 'বাগানের দৃশ্য', 'is_available' => true]);
+        RoomAmenity::query()->updateOrCreate(['slug' => 'attached-bathroom'], ['name_en' => 'Attached bathroom', 'name_bn' => 'সংযুক্ত বাথরুম', 'is_available' => true]);
+        RoomAmenity::query()->updateOrCreate(['slug' => 'hot-water'], ['name_en' => 'Hot water', 'name_bn' => 'গরম পানি', 'is_available' => true]);
         RoomAmenity::query()->updateOrCreate(['slug' => 'ac'], ['name_en' => 'Air conditioning', 'name_bn' => 'এসি', 'is_available' => false]);
         RoomAmenity::query()->updateOrCreate(['slug' => 'wifi'], ['name_en' => 'Wi-Fi', 'name_bn' => 'ওয়াই-ফাই', 'is_available' => false]);
         RoomAmenity::query()->updateOrCreate(['slug' => 'tv'], ['name_en' => 'Television', 'name_bn' => 'টেলিভিশন', 'is_available' => false]);
 
-        $deluxe = RoomCategory::query()->updateOrCreate(['slug' => 'deluxe-couple'], [
-            'name_en' => 'Deluxe Couple',
-            'name_bn' => 'ডিলাক্স কাপল',
-            'description_en' => 'A calm couple room with a garden view, attached bathroom and hot water. Simple, comfortable, and close to the sea.',
-            'description_bn' => 'বাগানের দৃশ্য, সংযুক্ত বাথরুম ও গরম পানিসহ একটি শান্ত কাপল রুম।',
-            'max_adults' => 2,
-            'max_children' => 1,
-            'view_en' => 'Garden view',
-            'view_bn' => 'বাগানের দৃশ্য',
-            'is_active' => true,
-            'sort_order' => 1,
-        ]);
-        $family = RoomCategory::query()->updateOrCreate(['slug' => 'family-room'], [
-            'name_en' => 'Family Room',
-            'name_bn' => 'ফ্যামিলি রুম',
-            'description_en' => 'A spacious family room for up to four adults, with an attached bathroom, hot water and a garden view.',
-            'description_bn' => 'চারজন প্রাপ্তবয়স্ক পর্যন্ত থাকার উপযোগী পরিবারিক রুম।',
-            'max_adults' => 4,
-            'max_children' => 2,
-            'view_en' => 'Garden view',
-            'view_bn' => 'বাগানের দৃশ্য',
-            'is_active' => true,
-            'sort_order' => 2,
-        ]);
-        $deluxe->amenities()->sync([$garden->id, $bath->id, $hot->id]);
-        $family->amenities()->sync([$garden->id, $bath->id, $hot->id]);
-
-        $twin = RoomCategory::query()->updateOrCreate(['slug' => 'garden-twin'], [
-            'name_en' => 'Garden Twin',
-            'name_bn' => 'গার্ডেন টুইন',
-            'description_en' => 'A twin room with a garden view, attached bathroom and hot water. Two beds for friends or family travelling together.',
-            'description_bn' => 'বাগানের দৃশ্য, সংযুক্ত বাথরুম ও গরম পানিসহ টুইন রুম।',
-            'max_adults' => 2,
-            'max_children' => 1,
-            'view_en' => 'Garden view',
-            'view_bn' => 'বাগানের দৃশ্য',
-            'is_active' => true,
-            'sort_order' => 3,
-        ]);
-        $twin->amenities()->sync([$garden->id, $bath->id, $hot->id]);
-
-        foreach (['101', '102', '103', '104'] as $code) {
-            Room::query()->updateOrCreate(['room_category_id' => $deluxe->id, 'code' => $code], ['name' => 'Room '.$code, 'is_active' => true]);
-        }
-        foreach (['201', '202'] as $code) {
-            Room::query()->updateOrCreate(['room_category_id' => $family->id, 'code' => $code], ['name' => 'Room '.$code, 'is_active' => true]);
-        }
-        foreach (['301', '302'] as $code) {
-            Room::query()->updateOrCreate(['room_category_id' => $twin->id, 'code' => $code], ['name' => 'Room '.$code, 'is_active' => true]);
-        }
-
-        if (app()->environment('testing') || env('SEED_DEMO_RATES', false)) {
-            RoomPrice::query()->updateOrCreate(['room_category_id' => $deluxe->id, 'type' => 'base'], ['amount' => 4500, 'is_active' => true]);
-            RoomPrice::query()->updateOrCreate(['room_category_id' => $family->id, 'type' => 'base'], ['amount' => 7500, 'is_active' => true]);
-            RoomPrice::query()->updateOrCreate(['room_category_id' => $deluxe->id, 'type' => 'weekend'], ['amount' => 5000, 'is_active' => true]);
-            RoomPrice::query()->updateOrCreate(['room_category_id' => $twin->id, 'type' => 'base'], ['amount' => 3500, 'is_active' => true]);
-        }
+        $this->call(RoomCategorySeeder::class);
 
         MealPlan::query()->updateOrCreate(['slug' => 'room-only'], [
             'name_en' => 'Room Only', 'name_bn' => 'শুধু রুম',
@@ -210,7 +149,7 @@ class DatabaseSeeder extends Seeder
 
         NotificationTemplate::query()->updateOrCreate(['key' => 'booking_confirmed', 'channel' => 'whatsapp'], [
             'name' => 'Booking confirmed',
-            'body' => 'Thank you, {{guest_name}}. Your stay at S T Amar Bari Resort is confirmed. Booking {{booking_number}}. Check-in {{check_in}}. Advance paid ৳{{amount_paid}}. Remaining ৳{{balance}}. Call {{resort_phone}}.',
+            'body' => 'Thank you, {{guest_name}}. Your stay at S T Amar Bari Resort is confirmed. Booking {{booking_number}}. Rooms: {{room_name}}. Check-in {{check_in}}. Advance paid ৳{{amount_paid}}. Remaining ৳{{balance}}. Call {{resort_phone}}.',
         ]);
         NotificationTemplate::query()->updateOrCreate(['key' => 'abandoned_booking', 'channel' => 'whatsapp'], [
             'name' => 'Abandoned booking',
@@ -226,8 +165,8 @@ class DatabaseSeeder extends Seeder
             ['experience', 'The island experience', 'Beach time, quiet sunsets, island walks, family moments and simple local food. Experiences listed here can be updated by the resort team as offerings change.'],
             ['house-rules', 'House rules', 'House rules are maintained by the resort team. Please treat this home, the garden and the island with care. Full rules can be updated from the admin panel.'],
             ['privacy-policy', 'Privacy policy', 'We collect only the guest details needed to complete a booking and to contact you about your stay. Payment credentials are never stored in this application.'],
-            ['terms', 'Terms & conditions', 'Bookings are subject to room availability, the cancellation policy, and payment of the required advance. Remaining balance is payable at the resort unless otherwise agreed.'],
-            ['cancellation-policy', 'Cancellation policy', "Default: cancellations made at least 1 day before check-in may receive a 100% refund of the advance, unless a different policy is published by the resort.\n\nIf a guest misses their ship: no refund.\n\nThe live policy is always the version stored in admin settings."],
+            ['terms', 'Terms & conditions', 'Bookings are subject to room availability, the cancellation policy, and payment of a 50% advance to confirm the booking. Remaining balance is payable at the resort unless otherwise agreed.'],
+            ['cancellation-policy', 'Cancellation policy', "Advance payment: a 50% advance payment is required to confirm a booking.\n\nCancellation 4 or more days before check-in: 30% of the advance payment is deducted as a cancellation fee, and the remaining 70% of the advance payment is refunded.\n\nCancellation less than 4 days before check-in: no refund is provided. The advance payment is non-refundable.\n\nIf a guest misses their ship: no refund."],
             ['saint-martin', 'Saint Martin', 'Saint Martin is Bangladesh’s coral island — quiet beaches, clear water and a slower pace. Travel plans should always be checked close to your dates.'],
             ['saint-martin-travel-guide', 'Travel guide', "Typical route:\nDhaka → Cox's Bazar → Teknaf → boat/ship to Saint Martin → S T Amar Bari Resort.\n\nTransportation schedules change. Please confirm current ship and bus information before you travel."],
             ['saint-martin-tourist-spots', 'Tourist spots', 'Beaches, Chhera Dwip (when accessible), coral views and village walks. Details can be updated from the admin.'],
@@ -249,6 +188,11 @@ class DatabaseSeeder extends Seeder
                 'indexable' => true,
             ]);
         }
+
+        ContentPage::query()->where('slug', 'cancellation-policy')->update([
+            'title_bn' => 'বাতিলকরণ নীতি',
+            'body_bn' => "অগ্রিম পরিশোধ: বুকিং নিশ্চিত করতে ৫০% অগ্রিম পরিশোধ করতে হবে।\n\nচেক-ইনের ৪ দিন বা তার বেশি আগে বাতিল করলে: অগ্রিমের ৩০% বাতিলকরণ ফি হিসেবে কাটা হবে এবং বাকি ৭০% ফেরত দেওয়া হবে।\n\nচেক-ইনের ৪ দিনের কম সময় আগে বাতিল করলে: কোনো অর্থ ফেরত দেওয়া হবে না। অগ্রিম অফেরতযোগ্য।\n\nজাহাজ মিস হলে কোনো অর্থ ফেরত দেওয়া হয় না।",
+        ]);
     }
 
     private function faqs(): void
@@ -259,6 +203,8 @@ class DatabaseSeeder extends Seeder
             ['Is there Wi-Fi?', 'Wi-Fi is not currently available.'],
             ['Do you have a television in the rooms?', 'Televisions are not currently available.'],
             ['How do I get to the resort?', 'Most guests travel Dhaka → Cox’s Bazar → Teknaf → boat/ship to Saint Martin. Please confirm current transport information before you travel.'],
+            ['Do I need to pay an advance?', 'Yes. A 50% advance payment is required to confirm a booking. The remaining balance is paid at the resort.'],
+            ['What is the cancellation policy?', 'If you cancel 4 or more days before check-in, 30% of the advance is kept as a cancellation fee and the remaining 70% of the advance is refunded. Cancellations less than 4 days before check-in are not refunded.'],
             ['What if I miss the ship?', 'If a guest misses their ship, no refund is issued.'],
             ['Can I book for a group?', 'Yes. Please use the group inquiry form and the resort will respond directly.'],
         ];
@@ -281,8 +227,8 @@ class DatabaseSeeder extends Seeder
                 'slug' => 'family-rooms',
                 'name_en' => 'Family rooms',
                 'name_bn' => 'পারিবারিক রুম',
-                'description_en' => 'Family rooms sleep up to four adults. Extra mattress pricing, if offered, is set in admin — it is not assumed here.',
-                'description_bn' => 'পারিবারিক রুমে চারজন প্রাপ্তবয়স্ক পর্যন্ত থাকতে পারেন। অতিরিক্ত গদি থাকলে তার দাম অ্যাডমিন থেকে নির্ধারিত হয়।',
+                'description_en' => 'Family rooms sleep up to four adults, with an attached bathroom, hot water and a garden view.',
+                'description_bn' => 'পারিবারিক রুমে চারজন প্রাপ্তবয়স্ক পর্যন্ত থাকতে পারেন — সংযুক্ত বাথরুম, গরম পানি ও বাগানের দৃশ্যসহ।',
             ],
             [
                 'slug' => 'book-direct',
@@ -311,8 +257,8 @@ class DatabaseSeeder extends Seeder
                 'slug' => 'garden-view-rooms',
                 'title_en' => 'Garden-view rooms on the island',
                 'title_bn' => 'দ্বীপে বাগান-দৃশ্যের রুম',
-                'content_en' => "S T Amar Bari has garden-view rooms with attached bathrooms and hot water.\n\nDeluxe Couple and Garden Twin sleep two adults. The Family Room sleeps up to four. We do not list sea-view rooms, air conditioning, Wi-Fi or television that we do not have.",
-                'content_bn' => "এস টি আমার বাড়িতে সংযুক্ত বাথরুম ও গরম পানিসহ বাগান-দৃশ্যের রুম আছে।\n\nডিলাক্স কাপল ও গার্ডেন টুইনে দুজন প্রাপ্তবয়স্ক থাকতে পারেন। ফ্যামিলি রুমে চারজন পর্যন্ত। যে সুবিধা নেই তা আমরা লিখি না।",
+                'content_en' => "S T Amar Bari has garden-view rooms with attached bathrooms and hot water.\n\nCouple rooms sleep two adults and one child. Double-bed rooms sleep up to four adults. We do not list sea-view rooms, air conditioning, Wi-Fi or television that we do not have.",
+                'content_bn' => "এস টি আমার বাড়িতে সংযুক্ত বাথরুম ও গরম পানিসহ বাগান-দৃশ্যের রুম আছে।\n\nকাপল রুমে দুজন প্রাপ্তবয়স্ক ও একজন শিশু থাকতে পারেন। ডাবল বেড রুমে চারজন প্রাপ্তবয়স্ক পর্যন্ত। যে সুবিধা নেই তা আমরা লিখি না।",
                 'tags' => 'Rooms, Garden view',
             ],
             [

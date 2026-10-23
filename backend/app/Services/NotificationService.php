@@ -8,7 +8,6 @@ use App\Models\NotificationTemplate;
 use App\Models\Setting;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
 
 class NotificationService
 {
@@ -61,7 +60,8 @@ class NotificationService
             'booking_number' => $booking->booking_number,
             'check_in' => $booking->check_in?->toDateString(),
             'check_out' => $booking->check_out?->toDateString(),
-            'room_name' => $booking->category?->name_en,
+            'room_name' => $booking->roomSummary(),
+            'room_count' => (string) $booking->roomLines()->sum('quantity'),
             'amount_paid' => $booking->amount_paid,
             'balance' => $booking->balance_amount,
             'resort_phone' => Setting::getValue('phone', '+880 1839-425157'),

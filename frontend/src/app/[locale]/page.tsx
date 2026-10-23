@@ -69,7 +69,7 @@ export default async function HomePage({
     image: roomImage(room),
     guests: room.max_adults,
     price: room.starting_price ? formatBdt(room.starting_price) : null,
-    view: room.view,
+    view: room.room_type_label ?? room.view,
   }));
 
   const uploaded: SiteImage[] = categories

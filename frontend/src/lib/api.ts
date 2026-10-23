@@ -46,12 +46,14 @@ export async function apiPost<T>(path: string, body: unknown): Promise<T> {
   return parse(response);
 }
 
+const GENERIC_ERROR = "Something went wrong. Please try again.";
+
 async function parse<T>(response: Response): Promise<T> {
-  const json = (await response.json()) as ApiSuccess<T> | ApiError;
-  if (!response.ok || !json.success) {
-    const message =
-      !json.success ? json.message : "Something went wrong. Please try again.";
-    throw new ApiRequestError(message, response.status, json.success ? undefined : json);
+  const json = (await response.json().catch(() => null)) as ApiSuccess<T> | ApiError | null;
+  if (!response.ok || !json?.success) {
+    // Server errors carry no message meant for guests.
+    const message = response.status < 500 && json && !json.success && json.message ? json.message : GENERIC_ERROR;
+    throw new ApiRequestError(message, response.status, json && !json.success ? json : undefined);
   }
   return json.data;
 }

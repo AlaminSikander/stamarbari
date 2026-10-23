@@ -48,7 +48,7 @@ export default async function RoomDetailPage({
       <PageHero
         route="rooms"
         image={roomImage(room).src}
-        eyebrow={room.view ?? t("eyebrow")}
+        eyebrow={room.room_type_label ?? room.view ?? t("eyebrow")}
         title={room.name}
         crumbs={[{ label: tNav("rooms"), href: "/rooms" }]}
         actions={[{ label: t("reserve"), href: "#reserve" }]}

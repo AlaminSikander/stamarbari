@@ -10,7 +10,7 @@ class InvoiceService
 {
     public function generate(Booking $booking): string
     {
-        $booking->load(['guests', 'category', 'mealPlan', 'addons.addon', 'rooms.room', 'payments']);
+        $booking->load(['guests', 'category', 'mealPlan', 'addons.addon', 'rooms.room', 'rooms.category', 'payments']);
         $pdf = Pdf::loadView('invoices.booking', [
             'booking' => $booking,
             'resort' => [

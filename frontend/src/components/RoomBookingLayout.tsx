@@ -1,4 +1,4 @@
-import { ArrowLeft, Baby, Check, Clock, Leaf, ScrollText, ShieldAlert, Users, Wallet } from "lucide-react";
+import { ArrowLeft, BedDouble, Check, Clock, Leaf, ScrollText, ShieldAlert, Users, Wallet } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { ReactNode } from "react";
 import { Link } from "@/i18n/navigation";
@@ -21,15 +21,20 @@ export function RoomBookingLayout({
   showTitle?: boolean;
 }) {
   const t = useTranslations("roomDetail");
-  const cancellationHours = policies.cancellation_hours;
+  const tRooms = useTranslations("rooms");
+  const days = policies.cancellation_days;
   const refund = policies.cancellation_refund_percent;
   const checkIn = formatClock(policies.check_in_time);
   const checkOut = formatClock(policies.check_out_time);
 
   const details: { icon: ReactNode; label: string; value: string }[] = [
+    ...(room.room_type_label ? [{ icon: <BedDouble aria-hidden className="h-5 w-5" strokeWidth={1.25} />, label: t("type"), value: room.room_type_label }] : []),
     ...(room.view ? [{ icon: <Leaf aria-hidden className="h-5 w-5" strokeWidth={1.25} />, label: t("view"), value: room.view }] : []),
-    { icon: <Users aria-hidden className="h-5 w-5" strokeWidth={1.25} />, label: t("occupancy"), value: t("occupancyValue", { count: room.max_adults }) },
-    { icon: <Baby aria-hidden className="h-5 w-5" strokeWidth={1.25} />, label: t("children"), value: t("childrenValue", { count: room.max_children }) },
+    {
+      icon: <Users aria-hidden className="h-5 w-5" strokeWidth={1.25} />,
+      label: t("occupancy"),
+      value: tRooms("capacity", { adults: room.max_adults, children: room.max_children }),
+    },
     {
       icon: <Wallet aria-hidden className="h-5 w-5" strokeWidth={1.25} />,
       label: t("price"),
@@ -49,7 +54,7 @@ export function RoomBookingLayout({
         </Link>
         {showTitle ? (
           <div className="mt-6">
-            <p className="eyebrow text-gold">{room.view ?? t("eyebrow")}</p>
+            <p className="eyebrow text-gold">{room.room_type_label ?? room.view ?? t("eyebrow")}</p>
             <h1 className="display-lg mt-4 font-light text-navy-deep">{room.name}</h1>
           </div>
         ) : null}
@@ -99,8 +104,12 @@ export function RoomBookingLayout({
                   <p>{t("checkIn", { time: checkIn })}</p>
                   <p>{t("checkOut", { time: checkOut })}</p>
                 </Policy>
+                <Policy icon={<Wallet aria-hidden className="h-5 w-5" strokeWidth={1.25} />} title={t("advanceTitle")}>
+                  <p>{t("advanceBody", { percent: policies.advance_percent })}</p>
+                </Policy>
                 <Policy icon={<ShieldAlert aria-hidden className="h-5 w-5" strokeWidth={1.25} />} title={t("cancellation")}>
-                  <p>{t("cancellationBody", { hours: cancellationHours, refund })}</p>
+                  <p>{t("cancellationBody", { days, fee: 100 - refund, refund })}</p>
+                  <p className="mt-2">{t("cancellationLate", { days })}</p>
                   <p className="mt-2">{t("missedShip")}</p>
                 </Policy>
                 <Policy icon={<ScrollText aria-hidden className="h-5 w-5" strokeWidth={1.25} />} title={t("houseRules")}>

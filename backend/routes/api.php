@@ -16,9 +16,10 @@ Route::get('/addons', [RoomController::class, 'addons']);
 Route::post('/availability', [AvailabilityController::class, 'search']);
 
 Route::get('/bookings/policies', [BookingController::class, 'policies']);
-Route::post('/bookings', [BookingController::class, 'store']);
-Route::get('/bookings/{bookingNumber}', [BookingController::class, 'show']);
-Route::get('/bookings/{bookingNumber}/invoice', [BookingController::class, 'invoice']);
+Route::post('/bookings/quote', [BookingController::class, 'quote'])->middleware('throttle:60,1');
+Route::post('/bookings', [BookingController::class, 'store'])->middleware('throttle:20,1');
+Route::get('/bookings/{bookingNumber}', [BookingController::class, 'show'])->middleware('throttle:30,1');
+Route::get('/bookings/{bookingNumber}/invoice', [BookingController::class, 'invoice'])->middleware('throttle:30,1');
 
 Route::post('/bookings/{bookingNumber}/payments', [PaymentController::class, 'start']);
 Route::post('/payments/callback', [PaymentController::class, 'callback']);

@@ -15,7 +15,7 @@ class SendBookingNotificationJob implements ShouldQueue
 
     public function handle(NotificationService $notifications): void
     {
-        $booking = Booking::query()->with(['guests', 'category'])->find($this->bookingId);
+        $booking = Booking::query()->with(['guests', 'category', 'rooms.category', 'rooms.room'])->find($this->bookingId);
         if ($booking) {
             $notifications->notifyBooking($booking, $this->templateKey);
         }

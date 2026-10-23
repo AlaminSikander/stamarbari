@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Contracts\PaymentGateway;
+use App\Enums\BookingStatus;
 use App\Enums\PaymentStatus;
 use App\Exceptions\BookingException;
 use App\Jobs\GenerateInvoiceJob;
@@ -35,7 +36,7 @@ class PaymentService
             }
 
             $reference = 'PAY-'.Str::upper(Str::random(10));
-            $callback = rtrim((string) config('app.frontend_url', config('app.url')), '/').'/booking/verify?booking='.$booking->booking_number;
+            $callback = rtrim((string) config('app.frontend_url', config('app.url')), '/').'/booking/verify?booking='.$booking->booking_number.'&token='.$booking->accessToken();
 
             $created = $this->gateway->createPayment(
                 $reference,
@@ -79,7 +80,7 @@ class PaymentService
                 }
             }
 
-            if ($booking->status === \App\Enums\BookingStatus::Confirmed) {
+            if ($booking->status === BookingStatus::Confirmed) {
                 $successful = Payment::query()
                     ->where('booking_id', $booking->id)
                     ->where('status', PaymentStatus::Successful)

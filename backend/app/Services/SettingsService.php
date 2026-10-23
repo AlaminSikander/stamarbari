@@ -27,14 +27,14 @@ class SettingsService
         return (int) $this->get('child_policy_age', 7);
     }
 
-    public function cancellationHours(): int
+    public function cancellationDays(): int
     {
-        return (int) $this->get('cancellation_hours', 24);
+        return (int) $this->get('cancellation_days', 4);
     }
 
     public function cancellationRefundPercent(): int
     {
-        return (int) $this->get('cancellation_refund_percent', 100);
+        return (int) $this->get('cancellation_refund_percent', 70);
     }
 
     public function missedShipRefund(): bool
@@ -44,22 +44,12 @@ class SettingsService
 
     public function advancePercent(): int
     {
-        return (int) $this->get('advance_percent', 30);
+        return (int) $this->get('advance_percent', 50);
     }
 
     public function holdMinutes(): int
     {
         return (int) $this->get('booking_hold_minutes', 15);
-    }
-
-    public function extraBedAvailable(): bool
-    {
-        return filter_var($this->get('extra_bed_available', '1'), FILTER_VALIDATE_BOOLEAN);
-    }
-
-    public function extraBedPrice(): float
-    {
-        return (float) $this->get('extra_bed_price', 0);
     }
 
     public function timezone(): string

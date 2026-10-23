@@ -22,14 +22,23 @@
         Guest: {{ $booking->guests->first()?->full_name }}<br>
         Check-in: {{ $booking->check_in?->toDateString() }} 12:00<br>
         Check-out: {{ $booking->check_out?->toDateString() }} 10:00<br>
-        Room: {{ $booking->category?->name_en }}<br>
+        Rooms: {{ $booking->roomSummary() }}<br>
         Guests: {{ $booking->adults }} adults, {{ $booking->children }} children<br>
         Meal plan: {{ $booking->mealPlan?->name_en ?? 'Room Only' }}<br>
         Status: {{ $booking->status->value }} / Payment {{ $booking->payments->where('status', 'successful')->count() ? 'Paid (advance)' : 'Pending' }}
     </p>
     <table>
         <tr><th>Item</th><th class="right">Amount (BDT)</th></tr>
-        <tr><td>Room</td><td class="right">{{ number_format($booking->room_subtotal, 2) }}</td></tr>
+        @foreach ($booking->roomLines() as $line)
+            <tr>
+                <td>
+                    {{ $line['name'] }}@if ($line['room_type_label']) ({{ $line['room_type_label'] }})@endif<br>
+                    <span class="muted">{{ $line['quantity'] }} {{ \Illuminate\Support\Str::plural('room', $line['quantity']) }} × {{ number_format($line['nightly_rate'], 2) }} × {{ $line['nights'] }} {{ \Illuminate\Support\Str::plural('night', $line['nights']) }}@if ($line['units']) · {{ implode(', ', $line['units']) }}@endif</span>
+                </td>
+                <td class="right">{{ number_format($line['subtotal'], 2) }}</td>
+            </tr>
+        @endforeach
+        <tr><td>Rooms subtotal</td><td class="right">{{ number_format($booking->room_subtotal, 2) }}</td></tr>
         <tr><td>Meals</td><td class="right">{{ number_format($booking->meal_total, 2) }}</td></tr>
         <tr><td>Add-ons</td><td class="right">{{ number_format($booking->addon_total, 2) }}</td></tr>
         <tr><td>Discount</td><td class="right">-{{ number_format($booking->discount_total, 2) }}</td></tr>

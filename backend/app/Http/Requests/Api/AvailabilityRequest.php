@@ -23,7 +23,6 @@ class AvailabilityRequest extends FormRequest
             'children' => ['nullable', 'integer', 'min:0', 'max:12'],
             'room_category_id' => ['nullable', 'integer', 'exists:room_categories,id'],
             'rooms_count' => ['nullable', 'integer', 'min:1', 'max:12'],
-            'extra_beds' => ['nullable', 'integer', 'min:0', 'max:8'],
         ];
     }
 

@@ -18,11 +18,14 @@ use Filament\Support\Icons\Heroicon;
 class SiteSettings extends Page implements HasForms
 {
     use InteractsWithForms;
+
     protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedCog6Tooth;
 
     protected static ?string $navigationLabel = 'Site Settings';
 
     protected static ?string $title = 'Site Settings';
+
+    protected static ?string $slug = 'settings';
 
     protected static ?int $navigationSort = 90;
 
@@ -37,8 +40,8 @@ class SiteSettings extends Page implements HasForms
     {
         $keys = [
             'phone', 'whatsapp', 'email', 'address', 'maps_url', 'facebook_url', 'instagram_url',
-            'check_in_time', 'check_out_time', 'child_policy_age', 'cancellation_hours',
-            'cancellation_refund_percent', 'advance_percent', 'booking_hold_minutes', 'extra_bed_price',
+            'check_in_time', 'check_out_time', 'child_policy_age', 'cancellation_days',
+            'cancellation_refund_percent', 'advance_percent', 'booking_hold_minutes',
             'google_reviews_url', 'tripadvisor_url', 'trade_license', 'tourism_registration',
             'wifi_status', 'electricity_notes', 'network_notes', 'drinking_water_notes',
             'emergency_medical', 'emergency_phone', 'coast_guard', 'local_emergency', 'resort_emergency',
@@ -47,7 +50,6 @@ class SiteSettings extends Page implements HasForms
             $this->data[$key] = Setting::getValue($key, '');
         }
         $this->data['missed_ship_refund'] = Setting::getValue('missed_ship_refund', '0') === '1';
-        $this->data['extra_bed_available'] = Setting::getValue('extra_bed_available', '1') === '1';
     }
 
     public function form(Schema $schema): Schema
@@ -66,12 +68,18 @@ class SiteSettings extends Page implements HasForms
                 TextInput::make('check_in_time'),
                 TextInput::make('check_out_time'),
                 TextInput::make('child_policy_age')->numeric(),
-                TextInput::make('cancellation_hours')->numeric(),
-                TextInput::make('cancellation_refund_percent')->numeric(),
-                TextInput::make('advance_percent')->numeric(),
+                TextInput::make('cancellation_days')
+                    ->numeric()
+                    ->label('Cancellation notice (days before check-in)')
+                    ->helperText('Cancelling with less notice than this is non-refundable.'),
+                TextInput::make('cancellation_refund_percent')
+                    ->numeric()
+                    ->label('Refund of advance when cancelled in time (%)')
+                    ->helperText('The rest of the advance is kept as the cancellation fee.'),
+                TextInput::make('advance_percent')
+                    ->numeric()
+                    ->label('Advance required to confirm (%)'),
                 TextInput::make('booking_hold_minutes')->numeric(),
-                Toggle::make('extra_bed_available'),
-                TextInput::make('extra_bed_price')->numeric(),
                 Toggle::make('missed_ship_refund')->label('Refund if guest misses ship'),
             ])->columns(2),
             Section::make('Facilities & emergency')->schema([

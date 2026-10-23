@@ -1,5 +1,7 @@
 # Payment
 
+**Currently disabled.** `BOOKING_ONLINE_PAYMENT_ENABLED=false` (the default) makes website bookings plain requests with no payment (see `booking-system.md`). The bKash gateway, payment tables, callback route and frontend payment redirect are kept. To turn payment back on, set `BOOKING_ONLINE_PAYMENT_ENABLED=true` with working `BKASH_*` credentials and run the test matrix below.
+
 Primary gateway: **bKash** tokenized checkout.
 
 ```

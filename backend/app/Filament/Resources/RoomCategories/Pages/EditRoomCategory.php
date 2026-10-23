@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\RoomCategories\Pages;
 
 use App\Filament\Resources\RoomCategories\RoomCategoryResource;
+use App\Filament\Resources\RoomCategories\Tables\RoomCategoriesTable;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ForceDeleteAction;
 use Filament\Actions\RestoreAction;
@@ -15,8 +16,8 @@ class EditRoomCategory extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            DeleteAction::make(),
-            ForceDeleteAction::make(),
+            RoomCategoriesTable::guardDelete(DeleteAction::make()),
+            RoomCategoriesTable::guardDelete(ForceDeleteAction::make(), permanently: true),
             RestoreAction::make(),
         ];
     }

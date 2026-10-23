@@ -13,6 +13,10 @@ class PaymentController extends Controller
 {
     public function start(string $bookingNumber, PaymentService $payments)
     {
+        if (! config('booking.online_payment_enabled')) {
+            return ApiResponse::error('Online payment is temporarily unavailable. The resort will contact you to confirm your booking.', [], 409);
+        }
+
         $booking = Booking::query()->where('booking_number', $bookingNumber)->firstOrFail();
 
         try {

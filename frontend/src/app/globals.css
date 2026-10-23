@@ -341,6 +341,27 @@ html.intro-play .header-enter {
   }
 }
 
+.toast-in {
+  animation: toast-in 0.5s var(--ease-out) both;
+}
+
+@keyframes toast-in {
+  from {
+    transform: translateY(-12px);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast-in {
+    animation: none;
+  }
+}
+
 .burger-line {
   position: absolute;
   left: 0;

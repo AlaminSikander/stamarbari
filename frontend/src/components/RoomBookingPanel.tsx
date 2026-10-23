@@ -1,11 +1,13 @@
 "use client";
 
 import { CalendarDays, Loader2, ShieldCheck } from "lucide-react";
-import { useTranslations } from "next-intl";
-import { useEffect, useMemo, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { apiPost, formatBdt, ApiRequestError } from "@/lib/api";
+import { markSubmitted, newRequestKey, submitBooking, successPath } from "@/lib/booking";
 import { contact } from "@/lib/contact";
-import type { AvailabilityResult, BookingPayload, BookingPolicies, Quote, RoomSummary } from "@/lib/types";
+import type { AvailabilityResult, BookingPolicies, Quote, RoomSummary } from "@/lib/types";
+import { Link, useRouter } from "@/i18n/navigation";
 import { WhatsAppIcon } from "@/components/icons/WhatsAppIcon";
 import { Stepper } from "@/components/Stepper";
 
@@ -33,26 +35,29 @@ export function RoomBookingPanel({
   const t = useTranslations("bookingPanel");
   const tSearch = useTranslations("search");
   const tRooms = useTranslations("rooms");
+  const tRequest = useTranslations("bookingRequest");
+  const locale = useLocale();
+  const router = useRouter();
+  const paymentsOn = policies.online_payment_enabled ?? false;
+  const inFlight = useRef(false);
+  const requestKey = useRef<{ attempt: string; key: string } | null>(null);
   const [checkIn, setCheckIn] = useState(isoDate(1));
   const [checkOut, setCheckOut] = useState(isoDate(2));
   const [roomsCount, setRoomsCount] = useState(1);
   const [adults, setAdults] = useState(1);
   const [children, setChildren] = useState(0);
-  const [extraBeds, setExtraBeds] = useState(0);
   const [notes, setNotes] = useState("");
   const [guest, setGuest] = useState({ full_name: "", phone: "", email: "" });
   const [result, setResult] = useState<AvailabilityState | null>(null);
   const [actionMessage, setActionMessage] = useState("");
   const [paying, setPaying] = useState(false);
 
-  const maxExtra = (policies.max_extra_beds_per_room ?? 2) * roomsCount;
-  const extraAllowed = policies.extra_bed_available && (room.extra_bed_allowed ?? true);
-
   const searchKey = useMemo(
-    () => `${checkIn}|${checkOut}|${roomsCount}|${adults}|${children}|${extraBeds}|${room.id}`,
-    [checkIn, checkOut, roomsCount, adults, children, extraBeds, room.id],
+    () => `${checkIn}|${checkOut}|${roomsCount}|${adults}|${children}|${room.id}`,
+    [checkIn, checkOut, roomsCount, adults, children, room.id],
   );
   const rangeError = !checkIn || !checkOut || checkOut <= checkIn;
+  const multiUnit = (room.inventory ?? 1) > 1;
 
   // A new search clears messages from the previous attempt.
   const [messageKey, setMessageKey] = useState(searchKey);
@@ -76,7 +81,6 @@ export function RoomBookingPanel({
       children,
       room_category_id: room.id,
       rooms_count: roomsCount,
-      extra_beds: extraBeds,
     })
       .then((data) => {
         if (!active) return;
@@ -102,10 +106,11 @@ export function RoomBookingPanel({
     return () => {
       active = false;
     };
-  }, [searchKey, rangeError, checkIn, checkOut, adults, children, extraBeds, room.id, roomsCount, t]);
+  }, [searchKey, rangeError, checkIn, checkOut, adults, children, room.id, roomsCount, t]);
 
   async function onBook() {
-    if (!guest.full_name || !guest.phone) {
+    if (inFlight.current) return;
+    if (!guest.full_name.trim() || !guest.phone.trim()) {
       setActionMessage(t("errGuest"));
       return;
     }
@@ -113,40 +118,56 @@ export function RoomBookingPanel({
       setActionMessage(t("errGone"));
       return;
     }
+    inFlight.current = true;
     setPaying(true);
     setActionMessage("");
+    // The same stay and phone reuse one request key, so a retry returns the booking already saved.
+    const attempt = `${searchKey}|${guest.phone.trim()}`;
+    if (requestKey.current?.attempt !== attempt) requestKey.current = { attempt, key: newRequestKey() };
+    let leaving = false;
     try {
-      const created = await apiPost<BookingPayload>("/bookings", {
-        check_in: checkIn,
-        check_out: checkOut,
-        adults,
-        children,
-        room_category_id: room.id,
-        rooms_count: roomsCount,
-        extra_beds: extraBeds,
-        extra_bed: extraBeds > 0,
-        special_requests: notes || undefined,
-        guest,
-      });
-      const payment = await apiPost<{ payment_url: string | null }>(
-        `/bookings/${created.booking_number}/payments`,
-        {},
+      const created = await submitBooking(
+        {
+          check_in: checkIn,
+          check_out: checkOut,
+          adults,
+          children,
+          room_category_id: room.id,
+          rooms_count: roomsCount,
+          special_requests: notes.trim() || undefined,
+          locale,
+          guest: { full_name: guest.full_name.trim(), phone: guest.phone.trim(), email: guest.email.trim() || undefined },
+        },
+        requestKey.current.key,
       );
-      if (payment.payment_url) {
-        window.location.href = payment.payment_url;
+      if (created.payment_required) {
+        const payment = await apiPost<{ payment_url: string | null }>(
+          `/bookings/${created.booking_number}/payments`,
+          {},
+        );
+        if (payment.payment_url) {
+          leaving = true;
+          window.location.href = payment.payment_url;
+          return;
+        }
+        setActionMessage(t("errPayment"));
         return;
       }
-      setActionMessage(t("errPayment"));
+      leaving = true;
+      markSubmitted(created.booking_number);
+      router.push(successPath(created));
     } catch (error: unknown) {
       setActionMessage(error instanceof ApiRequestError ? error.message : t("errGeneric"));
     } finally {
-      setPaying(false);
+      if (!leaving) {
+        inFlight.current = false;
+        setPaying(false);
+      }
     }
   }
 
   const nights = quote?.nights ?? 1;
   const nightly = quote?.nightly_rate ?? room.starting_price ?? 0;
-  const extraLine = extraBeds > 0 ? extraBeds * policies.extra_bed_price * nights : 0;
   const whatsappText = t("whatsappText", { room: room.name, checkIn, checkOut });
 
   return (
@@ -190,17 +211,21 @@ export function RoomBookingPanel({
         </div>
 
         <div>
-          <p className="field-label">{t("rooms")}</p>
-          <div className="mt-2">
-            <Stepper
-              label={t("roomsLabel")}
-              value={roomsCount}
-              min={1}
-              max={Math.max(1, available ?? room.inventory ?? 8)}
-              onChange={setRoomsCount}
-            />
-          </div>
-          <p className="mt-2 flex min-h-5 items-center gap-2 text-xs text-muted" aria-live="polite">
+          {multiUnit ? (
+            <>
+              <p className="field-label">{t("rooms")}</p>
+              <div className="mt-2">
+                <Stepper
+                  label={t("roomsLabel")}
+                  value={roomsCount}
+                  min={1}
+                  max={Math.max(1, available ?? room.inventory ?? 1)}
+                  onChange={setRoomsCount}
+                />
+              </div>
+            </>
+          ) : null}
+          <p className={`${multiUnit ? "mt-2" : ""} flex min-h-5 items-center gap-2 text-xs text-muted`} aria-live="polite">
             {status === "loading" ? (
               <>
                 <Loader2 aria-hidden className="h-3.5 w-3.5 animate-spin text-gold" />
@@ -216,29 +241,20 @@ export function RoomBookingPanel({
 
         <div>
           <p className="field-label">{t("guests", { max: room.max_adults })}</p>
-          <div className="mt-2 grid grid-cols-2 gap-3">
+          <p className="mt-1 text-xs text-muted">{tRooms("capacity", { adults: room.max_adults, children: room.max_children })}</p>
+          <div className={`mt-2 grid gap-3 ${room.max_children > 0 ? "grid-cols-2" : "grid-cols-1"}`}>
             <div>
               <p className="mb-1.5 text-xs text-muted">{tSearch("adults")}</p>
               <Stepper label={t("adultsLabel")} value={adults} min={1} max={room.max_adults} onChange={setAdults} />
             </div>
-            <div>
-              <p className="mb-1.5 text-xs text-muted">{tSearch("children")}</p>
-              <Stepper label={t("childrenLabel")} value={children} min={0} max={room.max_children} onChange={setChildren} />
-            </div>
+            {room.max_children > 0 ? (
+              <div>
+                <p className="mb-1.5 text-xs text-muted">{tSearch("children")}</p>
+                <Stepper label={t("childrenLabel")} value={children} min={0} max={room.max_children} onChange={setChildren} />
+              </div>
+            ) : null}
           </div>
         </div>
-
-        {extraAllowed ? (
-          <div>
-            <p className="field-label">
-              {t("extra")} {policies.extra_bed_price > 0 ? t("extraPrice", { price: formatBdt(policies.extra_bed_price) }) : ""}
-            </p>
-            <div className="mt-2">
-              <Stepper label={t("extraLabel")} value={extraBeds} min={0} max={maxExtra} onChange={setExtraBeds} />
-            </div>
-            <p className="mt-2 text-xs text-muted">{t("extraMax", { max: maxExtra, count: roomsCount })}</p>
-          </div>
-        ) : null}
 
         <label className="block">
           <span className="field-label">{t("notes")}</span>
@@ -296,29 +312,34 @@ export function RoomBookingPanel({
               <span>{t("lineRooms", { price: formatBdt(nightly), rooms: roomsCount, nights })}</span>
               <span className="tabular-nums">{formatBdt(quote.room_subtotal)}</span>
             </div>
-            {extraLine > 0 ? (
-              <div className="flex justify-between gap-4">
-                <span>{t("extraLine")}</span>
-                <span className="tabular-nums">{formatBdt(quote.extra_bed_total)}</span>
-              </div>
-            ) : null}
             <div className="flex justify-between gap-4">
               <span>{t("subtotal")}</span>
-              <span className="tabular-nums">{formatBdt(quote.room_subtotal + quote.extra_bed_total)}</span>
+              <span className="tabular-nums">{formatBdt(quote.room_subtotal)}</span>
             </div>
-            <div className="flex justify-between gap-4 text-navy-deep">
-              <span>{t("advance", { percent: quote.advance_percent })}</span>
-              <span className="tabular-nums font-medium">{formatBdt(quote.advance_amount)}</span>
-            </div>
-            <div className="flex justify-between gap-4">
-              <span>{t("remaining")}</span>
-              <span className="tabular-nums">{formatBdt(quote.balance_amount)}</span>
-            </div>
+            {paymentsOn ? (
+              <>
+                <div className="flex justify-between gap-4 text-navy-deep">
+                  <span>{t("advance", { percent: quote.advance_percent })}</span>
+                  <span className="tabular-nums font-medium">{formatBdt(quote.advance_amount)}</span>
+                </div>
+                <div className="flex justify-between gap-4">
+                  <span>{t("remaining")}</span>
+                  <span className="tabular-nums">{formatBdt(quote.balance_amount)}</span>
+                </div>
+              </>
+            ) : null}
             <div className="flex items-baseline justify-between gap-4 border-t border-line pt-3 text-navy-deep">
               <span className="field-label text-navy-deep">{t("total")}</span>
               <span className="font-display text-2xl tabular-nums">{formatBdt(quote.grand_total)}</span>
             </div>
-            <p className="pt-1 text-xs leading-relaxed text-muted">{t("priceNote")}</p>
+            <p className="pt-1 text-xs leading-relaxed text-muted">
+              {t("cancellationNote", {
+                advance: policies.advance_percent,
+                days: policies.cancellation_days,
+                refund: policies.cancellation_refund_percent,
+              })}
+            </p>
+            <p className="text-xs leading-relaxed text-muted">{t("priceNote")}</p>
           </div>
         ) : null}
 
@@ -337,8 +358,9 @@ export function RoomBookingPanel({
           >
             <span aria-hidden className="absolute inset-0 origin-left scale-x-0 rounded-full bg-gold transition-transform duration-500 ease-lux group-hover:scale-x-100" />
             {paying ? <Loader2 aria-hidden className="relative h-4 w-4 animate-spin" /> : null}
-            <span className="relative">{paying ? t("starting") : t("book")}</span>
+            <span className="relative">{paying ? (paymentsOn ? t("starting") : tRequest("submitting")) : t("book")}</span>
           </button>
+          {paymentsOn ? null : <p className="text-center text-xs text-muted">{tRequest("noPaymentNote")}</p>}
           <a
             href={`${contact.whatsapp}?text=${encodeURIComponent(whatsappText)}`}
             target="_blank"
@@ -348,9 +370,15 @@ export function RoomBookingPanel({
             <WhatsAppIcon className="h-4 w-4" />
             {t("whatsapp")}
           </a>
+          <Link
+            href={`/booking?${new URLSearchParams({ check_in: checkIn, check_out: checkOut, adults: String(adults), children: String(children), rooms: `${room.id}:${roomsCount}` }).toString()}`}
+            className="block pt-1 text-center text-xs font-medium text-navy underline decoration-gold underline-offset-4 hover:text-navy-deep"
+          >
+            {t("multi")}
+          </Link>
           <p className="flex items-start gap-2 pt-1 text-xs leading-relaxed text-muted">
             <ShieldCheck aria-hidden className="mt-0.5 h-4 w-4 shrink-0 text-gold" strokeWidth={1.5} />
-            {t("secure")}
+            {paymentsOn ? t("secure") : tRequest("secure")}
           </p>
         </div>
       </div>

@@ -5,8 +5,30 @@ const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
 const apiUrl = new URL(process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api/v1");
 
+// The admin dashboard (Laravel + Filament) is served from this site at /admin. Requests for
+// it, and for the Livewire/Filament assets it loads, are proxied to the Laravel app.
+// Rewrites are fixed at build time, so set BACKEND_ORIGIN before `next build`.
+const backendOrigin = (process.env.BACKEND_ORIGIN || apiUrl.origin).replace(/\/$/, "");
+const adminPaths = [
+  "/admin",
+  "/admin/:path*",
+  "/livewire/:path*",
+  "/filament/:path*",
+  "/css/filament/:path*",
+  "/js/filament/:path*",
+  "/fonts/filament/:path*",
+  "/storage/:path*",
+];
+
 const nextConfig: NextConfig = {
   output: "standalone",
+  async rewrites() {
+    return {
+      beforeFiles: adminPaths.map((source) => ({ source, destination: `${backendOrigin}${source}` })),
+      afterFiles: [],
+      fallback: [],
+    };
+  },
   images: {
     formats: ["image/avif", "image/webp"],
     qualities: [70, 75, 85],

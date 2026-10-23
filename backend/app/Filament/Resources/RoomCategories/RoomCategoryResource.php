@@ -22,6 +22,21 @@ class RoomCategoryResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedHomeModern;
 
+    protected static ?string $navigationLabel = 'Room Categories';
+
+    protected static ?string $modelLabel = 'room category';
+
+    protected static ?string $pluralModelLabel = 'Room Categories';
+
+    protected static ?string $recordTitleAttribute = 'name_en';
+
+    protected static ?string $slug = 'rooms';
+
+    public static function canAccess(): bool
+    {
+        return (bool) auth()->user()?->can('manage_rooms');
+    }
+
     public static function form(Schema $schema): Schema
     {
         return RoomCategoryForm::configure($schema);

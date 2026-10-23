@@ -36,12 +36,12 @@ export function RoomCard({ room, index = 0, sizes = "(min-width: 1024px) 33vw, (
           {room.starting_price ? t("fromShort", { price: formatBdt(room.starting_price) }) : t("noRate")}
         </span>
         <div className="absolute inset-x-0 bottom-0 p-6 text-white md:p-7">
-          {room.view ? <p className="eyebrow text-white/70">{room.view}</p> : null}
+          {(room.room_type_label ?? room.view) ? <p className="eyebrow text-white/70">{room.room_type_label ?? room.view}</p> : null}
           <h2 className="mt-2 font-display text-[2rem] font-light leading-[1.05] md:text-[2.3rem]">{room.name}</h2>
           <p className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-[0.72rem] uppercase tracking-[0.16em] text-white/80">
             <span className="inline-flex items-center gap-2">
               <Users aria-hidden className="h-4 w-4 text-[#e4c891]" strokeWidth={1.5} />
-              {t("guests", { count: room.max_adults })}
+              {t("capacity", { adults: room.max_adults, children: room.max_children })}
             </span>
             {hasBath ? (
               <span className="inline-flex items-center gap-2">

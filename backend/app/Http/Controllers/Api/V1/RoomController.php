@@ -19,6 +19,7 @@ class RoomController extends Controller
             ->where('is_active', true)
             ->with(['amenities' => fn ($q) => $q->where('is_available', true), 'images'])
             ->orderBy('sort_order')
+            ->orderBy('id')
             ->get()
             ->map(fn (RoomCategory $category) => $this->transform($category, $locale, $pricing));
 
@@ -77,6 +78,8 @@ class RoomController extends Controller
             'id' => $category->id,
             'slug' => $category->slug,
             'name' => $category->localizedName($locale),
+            'room_type' => $category->room_type?->value,
+            'room_type_label' => $category->room_type?->localizedLabel($locale),
             'description' => $locale === 'bn' && $category->description_bn ? $category->description_bn : $category->description_en,
             'max_adults' => $category->max_adults,
             'max_children' => $category->max_children,
@@ -93,7 +96,6 @@ class RoomController extends Controller
                 'path' => $img->path,
                 'alt' => $locale === 'bn' && $img->alt_bn ? $img->alt_bn : $img->alt_en,
             ]),
-            'extra_bed_allowed' => $category->rooms()->where('extra_bed_allowed', true)->exists(),
             'inventory' => $category->rooms()->where('is_active', true)->count(),
         ];
     }

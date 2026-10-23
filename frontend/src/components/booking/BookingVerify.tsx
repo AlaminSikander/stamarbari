@@ -32,7 +32,7 @@ export function BookingVerify() {
     })
       .then((data) => {
         if (data.booking_status === "confirmed") {
-          window.location.href = `/booking/success?booking=${booking}`;
+          window.location.href = `/booking/success?${new URLSearchParams({ booking, token: params.get("token") ?? "" })}`;
         } else {
           window.location.href = `/booking/failed?booking=${booking}&status=${data.booking_status}`;
         }

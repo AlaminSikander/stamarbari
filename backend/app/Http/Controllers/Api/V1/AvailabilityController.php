@@ -20,16 +20,22 @@ class AvailabilityController extends Controller
         $adults = (int) $request->validated('adults');
         $children = (int) $request->validated('children', 0);
         $roomCount = max(1, (int) $request->integer('rooms_count', 1));
-        $extraBeds = max(0, (int) $request->integer('extra_beds', 0));
         $locale = $request->query('locale', 'en');
 
-        $query = RoomCategory::query()->where('is_active', true)->with(['amenities' => fn ($q) => $q->where('is_available', true)]);
+        $query = RoomCategory::query()
+            ->where('is_active', true)
+            ->with(['amenities' => fn ($q) => $q->where('is_available', true)])
+            ->orderBy('sort_order')
+            ->orderBy('id');
         if ($request->filled('room_category_id')) {
             $query->where('id', $request->integer('room_category_id'));
         }
 
-        $results = $query->get()->map(function (RoomCategory $category) use ($availability, $pricing, $checkIn, $checkOut, $adults, $children, $roomCount, $extraBeds, $locale) {
-            $count = $availability->availableCount($category, $checkIn, $checkOut);
+        $categories = $query->get();
+        $free = $availability->availableRoomsFor($categories->modelKeys(), $checkIn, $checkOut);
+
+        $results = $categories->map(function (RoomCategory $category) use ($free, $pricing, $checkIn, $checkOut, $adults, $children, $roomCount, $locale) {
+            $count = $free->get($category->id, collect())->count();
             $fits = $adults <= $category->max_adults && $children <= $category->max_children;
             $enough = $count >= $roomCount;
             $quote = null;
@@ -43,11 +49,9 @@ class AvailabilityController extends Controller
                         $children,
                         null,
                         [],
-                        $extraBeds > 0,
                         null,
                         null,
                         $roomCount,
-                        $extraBeds,
                     );
                 } catch (BookingException) {
                     $quote = null;
@@ -58,9 +62,13 @@ class AvailabilityController extends Controller
                 'id' => $category->id,
                 'slug' => $category->slug,
                 'name' => $category->localizedName($locale),
+                'room_type' => $category->room_type?->value,
+                'room_type_label' => $category->room_type?->localizedLabel($locale),
                 'max_adults' => $category->max_adults,
                 'max_children' => $category->max_children,
                 'available_rooms' => $fits ? $count : 0,
+                'units_available' => $count,
+                'starting_price' => $pricing->startingNightlyRate($category),
                 'fits_guests' => $fits,
                 'quote' => $quote,
             ];
